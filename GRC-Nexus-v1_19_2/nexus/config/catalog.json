@@ -1,0 +1,12 @@
+{
+  "version": "1.19.1",
+  "note": "Informativo: el catálogo vigente está en app/catalog.js (importado de Rosetta, ver NOTICE.md). Las descripciones no reproducen texto protegido de normas.",
+  "frameworks": [
+    "iso27001",
+    "iso42001",
+    "ens",
+    "nis2",
+    "dora"
+  ],
+  "engine": "requirements -> unified controls -> maturity -> coverage -> gaps -> actions"
+}
