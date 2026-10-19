@@ -1,0 +1,10 @@
+{
+  "name": "grc-nexus",
+  "version": "1.20.0",
+  "private": true,
+  "scripts": {
+    "build": "node tools/build.js",
+    "check": "node tools/check.js",
+    "test": "node --test tests/engine.test.js && node tools/check.js"
+  }
+}
