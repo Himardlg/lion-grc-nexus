@@ -52,6 +52,7 @@
 ## Índice
 
 - [Qué es](#qué-es)
+- [Origen y autoría](#origen-y-autoría)
 - [Características](#características)
 - [Capturas](#capturas)
 - [Arquitectura](#arquitectura)
@@ -67,6 +68,21 @@
 Nexus GRC Lion es una aplicación web local-first para evaluar el cumplimiento de varias normas a la vez. Trabaja con **controles unificados** (capacidades): cada control se evalúa una sola vez y alimenta, con un peso, a los requisitos de todas las normas que lo usan. El catálogo de controles y correspondencias procede de [Rosetta Multinorma](https://github.com/heindall92/rosetta_multinorma).
 
 No necesita servidor ni instalación: se abre `index.html` (o el archivo único `dist/nexus.html`) y los datos se guardan en el `localStorage` del navegador.
+
+## Origen y autoría
+
+Nexus GRC Lion es una herramienta derivada de [Rosetta Multinorma](https://github.com/heindall92/rosetta_multinorma), creada por Yoandy Ramírez Delgado ([heindall92](https://github.com/heindall92)). De Rosetta hereda el catálogo de controles unificados, el modelo de correspondencias multinorma y el enfoque local-first, bajo la licencia GNU GPL v2.
+
+Nexus nace del interés de [Himardlg](https://github.com/Himardlg) en una versión propia adaptada a sus necesidades. heindall92 participa como autor de la herramienta original y como colaborador en Nexus, en diseño, catálogo y arquitectura.
+
+Cualquier redistribución o publicación de Nexus, o de trabajos derivados, debe mantener la atribución a Rosetta Multinorma y a su autor, conforme a la GPL v2 y a [`NOTICE.md`](NOTICE.md).
+
+| Persona | GitHub | Papel |
+|---|---|---|
+| Yoandy Ramírez Delgado | [`heindall92`](https://github.com/heindall92) | Autor de Rosetta (base) · diseño, catálogo y arquitectura |
+| Himardlg | [`Himardlg`](https://github.com/Himardlg) | Dirección del proyecto Nexus · funcionalidades |
+
+El detalle de las contribuciones está en [Quién hace qué](#quién-hace-qué).
 
 ## Características
 
@@ -304,14 +320,14 @@ Historial completo en [`CHANGELOG.md`](CHANGELOG.md).
 
 <table>
 <tr>
-<td align="center" width="50%"><a href="https://github.com/heindall92"><img src="https://github.com/heindall92.png?size=120" width="80" alt="heindall92"/><br/><b>Yoandy Ramírez Delgado</b></a><br/><code>heindall92</code><br/><sub>Diseño, UX/UI y marca Lion: Design System, intro, responsive, iconos Lucide. Catálogo y sincronización con Rosetta Multinorma.</sub></td>
-<td align="center" width="50%"><a href="https://github.com/Himardlg"><img src="https://github.com/Himardlg.png?size=120" width="80" alt="Himardlg"/><br/><b>Himardlg</b></a><br/><code>Himardlg</code><br/><sub>Funcionalidades GRC y producto: empresas, motor de cobertura y madurez, SoA, riesgos, evidencias, auditorías, planes, exportación, respaldos, buscador e informes.</sub></td>
+<td align="center" width="50%"><a href="https://github.com/heindall92"><img src="https://github.com/heindall92.png?size=120" width="80" alt="heindall92"/><br/><b>Yoandy Ramírez Delgado</b></a><br/><code>heindall92</code><br/><sub>Autor de Rosetta (base) · diseño, catálogo y arquitectura.<br/>Diseño, UX/UI y marca Lion: Design System, intro, responsive, iconos Lucide. Catálogo y sincronización con Rosetta Multinorma.</sub></td>
+<td align="center" width="50%"><a href="https://github.com/Himardlg"><img src="https://github.com/Himardlg.png?size=120" width="80" alt="Himardlg"/><br/><b>Himardlg</b></a><br/><code>Himardlg</code><br/><sub>Dirección del proyecto Nexus · funcionalidades.<br/>Funcionalidades GRC y producto: empresas, motor de cobertura y madurez, SoA, riesgos, evidencias, auditorías, planes, exportación, respaldos, buscador e informes.</sub></td>
 </tr>
 </table>
 
 ## Atribución y licencia
 
-El catálogo unificado y las correspondencias se basan en [Rosetta Multinorma](https://github.com/heindall92/rosetta_multinorma), de heindall92, publicado bajo GNU GPL v2. El catálogo actual equivale al contenido de Rosetta v2.3.0 (commit `e5e51f8`). Detalles en [`NOTICE.md`](NOTICE.md).
+El catálogo unificado y las correspondencias se basan en [Rosetta Multinorma](https://github.com/heindall92/rosetta_multinorma), de Yoandy Ramírez Delgado (heindall92), publicado bajo GNU GPL v2. El catálogo actual equivale al contenido de Rosetta v2.3.0 (commit `e5e51f8`). Detalles en [`NOTICE.md`](NOTICE.md).
 
 Nexus GRC Lion se distribuye bajo la **GNU General Public License v2**: ver [`LICENSE`](LICENSE).
 
