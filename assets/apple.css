@@ -1111,3 +1111,16 @@ input:focus-visible {
 @media (min-width: 481px) and (max-width: 1024px) {
   .shell main .pn-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+/* Formularios en línea (riesgos, evidencias) e informe sin desbordes en tablet y móvil */
+.shell main .inlineform > * { min-width: 0; max-width: 100%; }
+.shell main .inlineform select { width: 100%; text-overflow: ellipsis; }
+.shell main .inlineform label { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); }
+@media (max-width: 1024px) {
+  .shell main .inlineform { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .shell main .rep { margin-left: var(--gutter); margin-right: var(--gutter); max-width: none; }
+  .shell main .rep .pn-matrix { display: block; max-width: 100%; overflow-x: auto; }
+}
+@media (max-width: 800px) {
+  .shell main .inlineform { grid-template-columns: minmax(0, 1fr); }
+}
