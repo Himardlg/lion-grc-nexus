@@ -1,61 +1,121 @@
-# GRC Nexus 1.19.1
+# Nexus GRC Lion
 
-**Herramienta local de apoyo al trabajo GRC**: evaluación multinorma, madurez, riesgos, evidencias, auditorías, correspondencias requisito–control y planes de acción.
+<p align="center">
+  <img src="assets/lion-mark.png" alt="Nexus GRC Lion" width="96"/>
+</p>
 
-> **Estado del producto:** versión candidata para publicación y pruebas de usuario. No es una plataforma certificadora ni un dictamen jurídico. Antes de usarla en un cliente, valida el catálogo y cada correspondencia contra la fuente oficial vigente y el alcance concreto.
+<p align="center">
+  <b>Herramienta local de apoyo GRC multinorma</b> — evaluación, madurez, riesgos, evidencias, auditorías, correspondencias requisito–control y planes de acción.<br/>
+  Corre en el navegador; los datos se quedan en el dispositivo (<code>localStorage</code>).
+</p>
+
+<p align="center">
+  <img alt="Licencia GPLv2" src="https://img.shields.io/badge/LICENCIA-GPLv2-4169A1?style=flat"/>
+  <img alt="UI ES/EN" src="https://img.shields.io/badge/UI-ES%20%2F%20EN-f3bc25?style=flat&labelColor=1d1d1f"/>
+  <img alt="Local-first" src="https://img.shields.io/badge/datos-local--first-2E8B57?style=flat"/>
+  <img alt="Iconos Lucide" src="https://img.shields.io/badge/iconos-Lucide-F56565?style=flat"/>
+  <img alt="Versión" src="https://img.shields.io/badge/versión-1.19.2-1d1d1f?style=flat"/>
+</p>
+
+---
+
+## Intro
+
+<p align="center">
+  <a href="assets/intro.mp4">
+    <img src="docs/img/readme/intro-poster.png" alt="Intro cinematográfica Nexus GRC Lion" width="880"/>
+  </a>
+</p>
+
+<p align="center">
+  <video src="assets/intro.mp4" controls playsinline muted poster="docs/img/readme/intro-poster.png" width="880">
+    Tu navegador no reproduce el vídeo embebido. Ábrelo aquí: <a href="assets/intro.mp4">assets/intro.mp4</a>
+  </video>
+</p>
+
+<p align="center"><sub>Intro de marca Lion (vídeo en el repositorio). En móvil el fondo hace fundido negro → amarillo alineado con el vídeo.</sub></p>
+
+<p align="center">
+  <img src="docs/img/readme/intro-mid.png" alt="Fotograma del león geométrico en la intro" width="720"/>
+</p>
+
+---
+
+## Capturas
+
+<p align="center">
+  <img src="docs/img/readme/panel-desktop.png" alt="Panel multinorma en escritorio" width="880"/>
+</p>
+
+<p align="center"><sub>Escritorio — panel multinorma, marca Lion y acento amarillo.</sub></p>
+
+<p align="center">
+  <img src="docs/img/readme/panel-mobile.png" alt="Panel multinorma en móvil (390px)" width="390"/>
+</p>
+
+<p align="center"><sub>Móvil (~390 px) — barra inferior, menú hamburguesa y panel adaptado.</sub></p>
+
+---
+
+## Quién hace qué
+
+Trabajo en paralelo, sin pisar la misma zona del código. Referencia de reparto:
+
+| Persona | GitHub | Encargo |
+|--------|--------|---------|
+| **Yoandy Ramirez Delgado** | [`heindall92`](https://github.com/heindall92) | **Diseño, UX/UI y marca Lion** — tipografía y materiales, acento amarillo, logo/favicon, intro, responsive móvil (390 px), shell lateral, iconografía Lucide, alineación visual con Rosetta. También **catálogo / sincronización** derivada de Rosetta Multinorma cuando toque actualizar mapeos. |
+| **Himardlg** | [`Himardlg`](https://github.com/Himardlg) | **Funcionalidades GRC y producto** — empresas/proyectos, motor de cobertura y madurez, SoA, riesgos, evidencias, auditorías, planes de acción, export/import y respaldos, buscador, informes y nuevas capacidades de negocio. |
+
+### En esta rama (`rama_heindall92`)
+
+Aportación de **Yoandy / heindall92** para revisión (sin tocar `main` hasta el merge):
+
+- Marca **Nexus GRC Lion** (logo, favicon, intro)
+- Acento amarillo de producto (sustituye el verde de marca)
+- Intro con fundido negro→amarillo en móvil
+- Ajustes de UI móvil y shell
+- README con vídeo, capturas y roles
+
+### Origen del motor / catálogo
+
+El catálogo unificado y las correspondencias iniciales se basan parcialmente en [Rosetta Multinorma](https://github.com/heindall92/rosetta_multinorma) (**GPL-2.0**, heindall92). Ver `LICENSE` y `NOTICE.md`.
+
+---
+
+> **Estado:** versión candidata para pruebas. No es una plataforma certificadora ni un dictamen jurídico. Valida el catálogo y cada correspondencia contra la fuente oficial vigente.
 
 ## Inicio rápido
 
-- **Sin instalación:** abre `index.html` con un navegador moderno.
+- **Sin instalación:** abre `index.html` con un navegador moderno (mejor servirla en local: `npx serve`).
 - **Versión autocontenida:** abre `dist/nexus.html`.
-- **Pruebas automatizadas:** requiere Node.js y ejecuta `npm test`.
-- **Reconstruir el HTML autocontenido:** `npm run build`.
+- **Pruebas:** `npm test` (requiere Node.js).
+- **Rebuild autocontenido:** `npm run build`.
 
 ## Funcionalidades
 
-- Empresas y proyectos separados en el mismo navegador.
-- Selección de marcos y evaluación de requisitos/controles.
-- Seis niveles orientativos de madurez, con criterios descriptivos.
-- Panel multinorma, comparador, matriz de correspondencias revisable y exportación CSV.
-- Riesgos, evidencias, auditorías y acciones correctivas.
-- Exportación/importación por empresa y respaldo completo de todos los proyectos.
-- Temas claro/oscuro y ajustes de experiencia.
-- Validación y normalización de datos importados; neutralización de HTML en vistas y fórmulas CSV.
+- Empresas y proyectos separados en el mismo navegador
+- Selección de marcos y evaluación de requisitos/controles
+- Niveles orientativos de madurez
+- Panel multinorma, comparador, matriz de correspondencias y CSV
+- Riesgos, evidencias, auditorías y acciones
+- Exportación/importación y respaldo completo
+- Tema claro/oscuro e interfaz ES/EN (chrome del menú)
 
-## Privacidad y límites operativos
+## Privacidad y límites
 
-- La aplicación no requiere cuenta ni servidor: los datos de trabajo se almacenan en `localStorage` del navegador.
-- No hay sincronización entre usuarios o dispositivos. Los datos pueden perderse si se borra el almacenamiento del navegador o se cambia de perfil/dispositivo.
-- Exporta periódicamente un respaldo completo y guárdalo en una ubicación segura. El archivo puede contener información sensible de la organización.
-- No adjuntes contraseñas, secretos, datos personales innecesarios ni evidencias confidenciales; registra referencias a un repositorio controlado cuando sea posible.
-- La aplicación no cifra por sí misma el almacenamiento local ni los archivos de respaldo. Protege el equipo y el respaldo con los controles adecuados.
-
-## Método y cautelas de cumplimiento
-
-Las correspondencias entre controles unificados y requisitos normativos son una ayuda de análisis. Un control común puede cubrir solo parte de un requisito; una puntuación o estado de control no demuestra automáticamente conformidad, certificación ni cumplimiento legal. Revisa especialmente los requisitos con plazos, destinatarios, excepciones, roles o evidencias específicas.
-
-Las recomendaciones de aplicabilidad son orientativas y no sustituyen la determinación jurídica del alcance. Los textos y referencias de las normas deben verificarse frente a sus fuentes oficiales y versiones vigentes. Los textos íntegros de normas protegidas no se reproducen en el catálogo.
+- Sin cuenta ni servidor: datos en `localStorage`
+- Sin sincronización entre dispositivos
+- Exporta respaldos de forma periódica; no guardes secretos ni datos personales innecesarios en la app
+- La app no cifra el almacenamiento local por sí misma
 
 ## Marcos referenciados
 
-- ISO/IEC 27001:2022 — [fuente oficial ISO](https://www.iso.org/standard/27001)
-- ISO/IEC 42001:2023 — [fuente oficial ISO](https://www.iso.org/standard/42001)
-- Esquema Nacional de Seguridad, Real Decreto 311/2022 — [BOE](https://www.boe.es/eli/es/rd/2022/05/03/311)
-- Directiva NIS2, (UE) 2022/2555 — [EUR-Lex](https://eur-lex.europa.eu/eli/dir/2022/2555/oj?locale=es)
-- DORA, Reglamento (UE) 2022/2554 — [EUR-Lex](https://eur-lex.europa.eu/eli/reg/2022/2554/oj?locale=es)
+- ISO/IEC 27001:2022 — [ISO](https://www.iso.org/standard/27001)
+- ISO/IEC 42001:2023 — [ISO](https://www.iso.org/standard/42001)
+- ENS, RD 311/2022 — [BOE](https://www.boe.es/eli/es/rd/2022/05/03/311)
+- NIS2, (UE) 2022/2555 — [EUR-Lex](https://eur-lex.europa.eu/eli/dir/2022/2555/oj?locale=es)
+- DORA, (UE) 2022/2554 — [EUR-Lex](https://eur-lex.europa.eu/eli/reg/2022/2554/oj?locale=es)
 
-## Pruebas y calidad
+## Licencia
 
-`npm test` ejecuta pruebas del motor y comprobaciones estructurales de catálogo, vistas, importaciones, madurez, exportación y casos sin empresas. Estas comprobaciones no sustituyen una prueba manual de navegador, accesibilidad con tecnología asistiva ni revisión independiente del contenido normativo.
-
-Antes de anunciar una versión estable, prueba al menos: crear/editar/eliminar empresa; evaluar requisitos; guardar y reabrir; exportar/importar empresa; exportar/restaurar respaldo completo; probar una importación inválida; navegar con teclado; revisar en Chrome y Edge; verificar impresión e informes; y comprobar que no se envían datos a terceros.
-
-## Licencia y atribución
-
-Este proyecto incorpora y adapta partes del catálogo multinorma de [Rosetta Multinorma](https://github.com/heindall92/rosetta_multinorma), cuyo repositorio declara **GNU GPL v2.0**. Se incluye la licencia GPL-2.0 y una nota de atribución. La distribución de esta versión derivada debe respetar las condiciones de la licencia; conserva el código fuente y los avisos correspondientes.
-
-Los nombres y textos de las normas pertenecen a sus respectivos titulares. GRC Nexus no está afiliado ni respaldado por ISO, CCN, la Comisión Europea ni otros organismos referenciados.
-
-## Historial
-
-Consulta [CHANGELOG.md](CHANGELOG.md). Resumen de la 1.19.1: detalle de requisito completo (todas las capacidades, equivalencias y nivel ENS), escapado sistemático de textos y corrección de la pantalla inicial configurable.
+GNU GPL v2 — ver `LICENSE`. Historial en [CHANGELOG.md](CHANGELOG.md).
