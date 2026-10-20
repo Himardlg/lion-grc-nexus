@@ -82,7 +82,7 @@ No necesita servidor ni instalación: se abre `index.html` (o el archivo único 
 
 ## Capturas
 
-Datos de la empresa de ejemplo «TechServ · ejemplo». Escritorio a 1440×900 y móvil a 390×844, ambos a 2×.
+Datos de la empresa de ejemplo «TechServ · ejemplo» (en Riesgos, tres riesgos registrados desde el propio formulario). Escritorio a 1440×900 y móvil a 390×844, ambos a 2×.
 
 ### Inicio
 
@@ -91,7 +91,7 @@ Datos de la empresa de ejemplo «TechServ · ejemplo». Escritorio a 1440×900 y
 <table>
 <tr>
 <td width="74%" valign="top"><img src="docs/img/readme/inicio-light.png" alt="Inicio · claro"/><br/><sub>Escritorio · claro</sub><br/><br/><img src="docs/img/readme/inicio-dark.png" alt="Inicio · oscuro"/><br/><sub>Escritorio · oscuro</sub></td>
-<td width="26%" valign="top"><img src="docs/img/readme/inicio-mobile-light.png" alt="Inicio · móvil"/><br/><sub>Móvil 390 px · claro</sub></td>
+<td width="26%" valign="top"><img src="docs/img/readme/inicio-mobile-light.png" alt="Inicio · móvil"/><br/><sub>Móvil 390 px · claro</sub><br/><br/><img src="docs/img/readme/inicio-mobile-dark.png" alt="móvil oscuro"/><br/><sub>Móvil · oscuro</sub></td>
 </tr>
 </table>
 
@@ -146,7 +146,7 @@ Datos de la empresa de ejemplo «TechServ · ejemplo». Escritorio a 1440×900 y
 <table>
 <tr>
 <td width="74%" valign="top"><img src="docs/img/readme/riesgos-light.png" alt="Riesgos · claro"/><br/><sub>Escritorio · claro</sub><br/><br/><img src="docs/img/readme/riesgos-dark.png" alt="Riesgos · oscuro"/><br/><sub>Escritorio · oscuro</sub></td>
-<td width="26%" valign="top"><img src="docs/img/readme/riesgos-mobile-light.png" alt="Riesgos · móvil"/><br/><sub>Móvil 390 px · claro</sub></td>
+<td width="26%" valign="top"><img src="docs/img/readme/riesgos-mobile-light.png" alt="Riesgos · móvil"/><br/><sub>Móvil 390 px · claro</sub><br/><br/><img src="docs/img/readme/riesgos-mobile-dark.png" alt="móvil oscuro"/><br/><sub>Móvil · oscuro</sub></td>
 </tr>
 </table>
 
@@ -157,7 +157,7 @@ Datos de la empresa de ejemplo «TechServ · ejemplo». Escritorio a 1440×900 y
 <table>
 <tr>
 <td width="74%" valign="top"><img src="docs/img/readme/evidencias-light.png" alt="Evidencias · claro"/><br/><sub>Escritorio · claro</sub><br/><br/><img src="docs/img/readme/evidencias-dark.png" alt="Evidencias · oscuro"/><br/><sub>Escritorio · oscuro</sub></td>
-<td width="26%" valign="top"><img src="docs/img/readme/evidencias-mobile-light.png" alt="Evidencias · móvil"/><br/><sub>Móvil 390 px · claro</sub></td>
+<td width="26%" valign="top"><img src="docs/img/readme/evidencias-mobile-light.png" alt="Evidencias · móvil"/><br/><sub>Móvil 390 px · claro</sub><br/><br/><img src="docs/img/readme/evidencias-mobile-dark.png" alt="móvil oscuro"/><br/><sub>Móvil · oscuro</sub></td>
 </tr>
 </table>
 
@@ -168,7 +168,7 @@ Datos de la empresa de ejemplo «TechServ · ejemplo». Escritorio a 1440×900 y
 <table>
 <tr>
 <td width="74%" valign="top"><img src="docs/img/readme/informe-light.png" alt="Informe imprimible · claro"/><br/><sub>Escritorio · claro</sub><br/><br/><img src="docs/img/readme/informe-dark.png" alt="Informe imprimible · oscuro"/><br/><sub>Escritorio · oscuro</sub></td>
-<td width="26%" valign="top"><img src="docs/img/readme/informe-mobile-light.png" alt="Informe imprimible · móvil"/><br/><sub>Móvil 390 px · claro</sub></td>
+<td width="26%" valign="top"><img src="docs/img/readme/informe-mobile-light.png" alt="Informe imprimible · móvil"/><br/><sub>Móvil 390 px · claro</sub><br/><br/><img src="docs/img/readme/informe-mobile-dark.png" alt="móvil oscuro"/><br/><sub>Móvil · oscuro</sub></td>
 </tr>
 </table>
 
@@ -179,7 +179,7 @@ Datos de la empresa de ejemplo «TechServ · ejemplo». Escritorio a 1440×900 y
 <table>
 <tr>
 <td width="74%" valign="top"><img src="docs/img/readme/mapa-light.png" alt="Mapa multinorma · claro"/><br/><sub>Escritorio · claro</sub><br/><br/><img src="docs/img/readme/mapa-dark.png" alt="Mapa multinorma · oscuro"/><br/><sub>Escritorio · oscuro</sub></td>
-<td width="26%" valign="top"><img src="docs/img/readme/mapa-mobile-light.png" alt="Mapa multinorma · móvil"/><br/><sub>Móvil 390 px · claro</sub></td>
+<td width="26%" valign="top"><img src="docs/img/readme/mapa-mobile-light.png" alt="Mapa multinorma · móvil"/><br/><sub>Móvil 390 px · claro</sub><br/><br/><img src="docs/img/readme/mapa-mobile-dark.png" alt="móvil oscuro"/><br/><sub>Móvil · oscuro</sub></td>
 </tr>
 </table>
 
@@ -190,7 +190,7 @@ Datos de la empresa de ejemplo «TechServ · ejemplo». Escritorio a 1440×900 y
 <table>
 <tr>
 <td width="74%" valign="top"><img src="docs/img/readme/ajustes-light.png" alt="Ajustes · claro"/><br/><sub>Escritorio · claro</sub><br/><br/><img src="docs/img/readme/ajustes-dark.png" alt="Ajustes · oscuro"/><br/><sub>Escritorio · oscuro</sub></td>
-<td width="26%" valign="top"><img src="docs/img/readme/ajustes-mobile-light.png" alt="Ajustes · móvil"/><br/><sub>Móvil 390 px · claro</sub></td>
+<td width="26%" valign="top"><img src="docs/img/readme/ajustes-mobile-light.png" alt="Ajustes · móvil"/><br/><sub>Móvil 390 px · claro</sub><br/><br/><img src="docs/img/readme/ajustes-mobile-dark.png" alt="móvil oscuro"/><br/><sub>Móvil · oscuro</sub></td>
 </tr>
 </table>
 
