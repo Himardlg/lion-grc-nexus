@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert'),fs=require('fs'),p
 global.localStorage={_d:{},getItem(k){return this._d[k]??null},setItem(k,v){this._d[k]=v}};
 let _h='';global.location={get hash(){return _h},set hash(v){_h=v?(String(v).startsWith('#')?v:'#'+v):''}};global.window=global;global.scrollTo=()=>{};
 global.document={documentElement:{},getElementById:()=>({innerHTML:''}),querySelector:()=>null,querySelectorAll:()=>[]};
-const src=['app/icons.js','app/catalog.js','app/panel.js','app/app.js'].map(f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8')).join('\n');
+const src=[...fs.readFileSync(path.join(path.join(__dirname,'..'),'index.html'),'utf8').matchAll(/<script src="([^"]+)"><\/script>/g)].map(m=>m[1]).map(f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8')).join('\n');
 (0,eval)(src+';global.T={C,ctx,ctl,reqState,coverage,csvCell,normalizeCompany,overdue,wizGo,wizardBar,wizExit,WIZ,searchCatalog,compareFw,loadDemo,equivalents,db,migrateCompany,coherence,informeView,ensEffectiveCategory,ensReqLevel,xlsxBuild,buildBackupPayload,reqIntro,page,view,getDB:()=>db};global.alert=m=>{global.lastAlert=m};');
 const {C,ctx,ctl,reqState,coverage,csvCell,normalizeCompany,overdue,wizGo,wizardBar,wizExit,WIZ,searchCatalog,compareFw,loadDemo,equivalents,db,migrateCompany,coherence,informeView,ensEffectiveCategory,ensReqLevel,xlsxBuild,buildBackupPayload,reqIntro,page,view,getDB}=global.T;
 const reset=()=>{const c=ctx();c.selected=C.frameworks.map(f=>f.id);c.assess={};c.soa={};c.gapclosed={};c.target=3;return c};

@@ -3,7 +3,7 @@ const fs=require('fs'),path=require('path'),root=path.join(__dirname,'..');
 global.localStorage={_d:{},getItem(k){return this._d[k]??null},setItem(k,v){this._d[k]=v}};
 global.location={hash:''};global.window=global;global.scrollTo=()=>{};
 global.document={documentElement:{},getElementById:()=>({innerHTML:''}),querySelector:()=>null,querySelectorAll:()=>[]};
-const src=['app/icons.js','app/catalog.js','app/panel.js','app/app.js'].map(f=>fs.readFileSync(path.join(root,f),'utf8')).join('\n');
+const src=[...fs.readFileSync(path.join(root,'index.html'),'utf8').matchAll(/<script src="([^"]+)"><\/script>/g)].map(m=>m[1]).map(f=>fs.readFileSync(path.join(root,f),'utf8')).join('\n');
 (0,eval)(src+';global.__t={C,db,page,ctx,ctl,esc,normalizeCompany,panelView};global.deleteCompany=deleteCompany;global.view=view;');
 const {C,page,ctx,normalizeCompany,db}=global.__t;global.render=global.render||(()=>{});let bad=0;const fail=m=>{bad++;console.log('✗',m)},ok=m=>console.log('✓',m);
 const ids=a=>new Set(a.map(x=>x.id));
