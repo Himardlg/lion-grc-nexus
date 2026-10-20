@@ -108,3 +108,15 @@ Sin servidor ni cuenta. Datos en `localStorage`. Exporta respaldos; no guardes s
 ## Licencia
 
 GNU GPL v2 — `LICENSE`. Historial: [CHANGELOG.md](CHANGELOG.md).
+
+## Sincronizar el catálogo con Rosetta
+
+`app/catalog.js` se genera desde `src/data/catalog.json` de [Rosetta Multinorma](https://github.com/heindall92/rosetta_multinorma) (GPL v2); no se edita a mano.
+
+```bash
+node tools/sync-catalog.js ../rosetta_multinorma            # regenera app/catalog.js
+node tools/sync-catalog.js ../rosetta_multinorma --dry-run  # resumen de cambios, sin escribir
+node tools/sync-catalog.js ../rosetta_multinorma --check    # CI: código 1 si hay diferencias
+```
+
+La ruta también puede darse con `ROSETTA_DIR`. Tras regenerar, ejecuta `npm test` y `node tools/build.js`.

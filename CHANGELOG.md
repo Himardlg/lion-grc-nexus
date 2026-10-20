@@ -5,6 +5,7 @@
 - Incluye los 5 enlaces de peso 0 que añadió la alineación con la CCN-STIC 825: GOB-12 → ISO A5.2, ACC-03 → ENS op.acc.5, RED-01 → ENS op.mon.1, FIS-05 → ISO A7.2, ACT-09 → ISO A8.26. No alteran el cálculo de cumplimiento.
 - Pendiente: los 17 pares ENS ↔ ISO/IEC 27001 que la CCN-STIC 825 califica de parcialmente análogos son en Rosetta una regla de motor (`src/data/ccn825.json` + `rosetta-engine.js`), no datos del catálogo; no están portados a Nexus.
 - Sin cambios de datos ni de lógica.
+- Nuevo `tools/sync-catalog.js`: genera `app/catalog.js` desde `src/data/catalog.json` de Rosetta (sin dependencias), con validación de campos en español, `--check` (código 1 si difiere) y `--dry-run` (resumen de controles y requisitos añadidos/eliminados/modificados). Contra Rosetta `e5e51f8` reproduce byte a byte los datos actuales. Scripts npm `sync-catalog` y `sync-catalog:check`; pruebas en `tests/sync-catalog.test.js`.
 
 ## 1.19.2 — 13 de octubre de 2026
 - Pantalla «Acerca de» (`#about`) con versión, licencia GPL v2, condiciones de distribución y atribución completa a Rosetta Multinorma / heindall92.
