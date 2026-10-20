@@ -1,12 +1,5 @@
 # Cambios
 
-## 1.20.0 — 19 de octubre de 2026
-- Auditoría funcional completa: verificados 26 tests unitarios y 22 vistas sin errores.
-- Versión actualizada a 1.20.0 en todos los puntos: footer, pantalla «Acerca de», tarjeta de configuración y metadatos de respaldo.
-- Corrección de `appVersion` en el payload de exportación de respaldo (era '1.19.1', ahora '1.20.0').
-- Proyecto preparado para colaboración con heindall92: README, NOTICE, CONTRIBUTING, SECURITY y RELEASE_CHECKLIST actualizados.
-- Estructura de trabajo por ramas definida para integración con Rosetta Multinorma v2.2.0.
-
 ## 1.19.2 — 13 de octubre de 2026
 - Pantalla «Acerca de» (`#about`) con versión, licencia GPL v2, condiciones de distribución y atribución completa a Rosetta Multinorma / heindall92.
 - Enlace «ℹ Acerca de» añadido en la barra lateral.

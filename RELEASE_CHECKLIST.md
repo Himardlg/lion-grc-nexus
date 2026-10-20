@@ -1,50 +1,25 @@
-# Lista de comprobación para publicar Lion GRC Nexus
+# Lista de comprobación para publicar GRC Nexus
 
-Ejecuta esta lista antes de cada release y marca cada punto.
+## Funcionalidad
+- [ ] Crear, editar y eliminar una empresa de prueba.
+- [ ] Crear evaluaciones, riesgos, evidencias, auditorías y acciones.
+- [ ] Exportar/importar una empresa y comprobar que no se mezclan datos.
+- [ ] Exportar el respaldo completo, restaurarlo y comprobar todas las empresas.
+- [ ] Probar archivo de respaldo corrupto, mayor de 10 MB y cancelación de restauración.
+- [ ] Probar almacenamiento del navegador lleno y recuperación mediante respaldo.
+- [ ] Comprobar impresión, CSV e informe.
 
-## 🔧 Funcionalidad básica
+## Calidad y accesibilidad
+- [ ] Ejecutar `npm test`.
+- [ ] Probar Chrome y Edge en escritorio; comprobar una vista móvil.
+- [ ] Navegar con teclado, foco visible y etiquetas de formularios.
+- [ ] Revisar contraste y zoom al 200 %.
+- [ ] Revisar la consola del navegador sin errores.
 
-- [ ] Crear, editar y eliminar empresa de prueba
-- [ ] Wizard de creación completo (5 pasos)
-- [ ] Evaluar controles y verificar que la cobertura se calcula correctamente
-- [ ] Crear acciones, evidencias, riesgos y auditorías
-- [ ] Exportar e importar empresa — comprobar que no se mezclan datos
-- [ ] Exportar respaldo completo, restaurarlo y verificar todas las empresas
-- [ ] Probar restauración con fichero corrupto y con fichero >10 MB
-- [ ] Comprobar empresa de demo (datos precargados y cobertura > 0)
-
-## 📤 Exportaciones
-
-- [ ] Exportar Excel (4 hojas: Resumen, Requisitos, Capacidades, Plan de acción)
-- [ ] Exportar informe imprimible (sin errores de consola)
-- [ ] Exportar CSV desde panel
-
-## ✅ Calidad
-
-- [ ] `node --test tests/engine.test.js` — todos los tests en verde
-- [ ] `node tools/build.js` — build sin errores, tamaño razonable (<300 KB)
-- [ ] `node tools/check.js` — validación de catálogo sin errores
-- [ ] Consola del navegador sin errores en las pantallas principales
-- [ ] Probar en Chrome y Edge escritorio
-- [ ] Comprobar una vista en móvil (responsive)
-
-## ♿ Accesibilidad
-
-- [ ] Navegación completa con teclado (Tab, Enter, Esc)
-- [ ] Foco visible en todos los elementos interactivos
-- [ ] Zoom al 200% sin pérdida de contenido
-- [ ] Sin fallos WCAG AA en tema claro ni oscuro
-
-## 📋 Normativa y atribución
-
-- [ ] Versión actualizada en `package.json`, `CHANGELOG.md` y UI (`app.js`)
-- [ ] `CHANGELOG.md` con todas las entradas de la versión
-- [ ] `NOTICE.md` con atribución correcta a Rosetta Multinorma / heindall92
-- [ ] Licencia GPL v2 conservada en todos los ficheros fuente
-- [ ] No se presentan métricas como certificación ni dictamen jurídico
-
-## 🚀 Publicación
-
-- [ ] Tag de git con el número de versión (`v1.x.x`)
-- [ ] `dist/nexus.html` generado y probado como fichero standalone
-- [ ] Código fuente disponible (obligación GPL v2)
+## Normativa y publicación
+- [ ] Revisar referencias y versiones normativas contra fuentes oficiales.
+- [ ] Validar manualmente correspondencias totales, parciales e informativas.
+- [ ] Confirmar el ámbito de aplicación de cada marco para el caso de uso.
+- [ ] Conservar GPL-2.0, avisos y atribución del proyecto de origen.
+- [ ] No presentar métricas como certificación ni dictamen jurídico.
+- [ ] Publicar el código fuente y el fichero autocontenido de la misma versión.

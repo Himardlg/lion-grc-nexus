@@ -1,1 +1,23 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101a2b"><meta name="description" content="GRC Nexus: herramienta local de apoyo para evaluación multinorma, riesgos, evidencias, madurez y planes de acción."><title>GRC Nexus v1.20.0</title><link rel="stylesheet" href="assets/app.css"></head><body><div id="app"></div><script src="app/catalog.js"></script><script src="app/panel.js"></script><script src="app/app.js"></script></body></html>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f5f7"><meta name="description" content="Nexus GRC Lion: herramienta local de apoyo para evaluación multinorma, riesgos, evidencias, madurez y planes de acción."><title>Nexus GRC Lion v1.19.0</title><link rel="icon" href="assets/lion-mark.png" type="image/png"><link rel="stylesheet" href="assets/app.css"><link rel="stylesheet" href="assets/apple.css"></head><body><div id="boot" class="boot" role="dialog" aria-label="Introducción"><video id="bootvid" src="assets/intro.mp4" autoplay muted playsinline preload="auto"></video><div class="bootbar"><button type="button" id="bootsound">Sonido</button><button type="button" id="bootskip">Omitir</button></div></div><div id="app"></div><script>
+(function(){
+  var boot=document.getElementById('boot'),v=document.getElementById('bootvid');
+  if(!boot||!v)return;
+  var en=false,faded=false,FADE_AT=6.8;
+  try{var db=JSON.parse(localStorage.getItem('grc-nexus-v19')||'null');en=!!(db&&db.settings&&db.settings.language==='en')}catch(e){}
+  if(en){document.getElementById('bootsound').textContent='Sound';document.getElementById('bootskip').textContent='Skip';boot.setAttribute('aria-label','Introduction')}
+  function mobile(){return window.matchMedia('(max-width:480px)').matches}
+  function fadeYellow(){if(faded||!boot.isConnected||!mobile())return;if(v.currentTime>=FADE_AT){boot.classList.add('boot-yellow');faded=true}}
+  function tick(){if(faded||!boot.isConnected)return;fadeYellow();if(!faded)requestAnimationFrame(tick)}
+  function close(){if(!boot.isConnected||boot.classList.contains('boot-out'))return;v.pause();boot.classList.add('boot-out');setTimeout(function(){boot.remove()},420)}
+  v.addEventListener('ended',close);
+  v.addEventListener('error',close);
+  v.addEventListener('timeupdate',fadeYellow);
+  v.addEventListener('play',function(){requestAnimationFrame(tick)});
+  document.getElementById('bootskip').addEventListener('click',close);
+  document.getElementById('bootsound').addEventListener('click',function(){v.muted=false;var p=v.play();if(p&&p.catch)p.catch(function(){});this.hidden=true});
+  var play=v.play();
+  if(play&&play.catch)play.catch(function(){v.muted=true;var again=v.play();if(again&&again.catch)again.catch(close)});
+  requestAnimationFrame(tick);
+  setTimeout(function(){if(boot.isConnected&&v.readyState<2)close()},12000);
+})();
+</script><script src="app/icons.js"></script><script src="app/catalog.js"></script><script src="app/panel.js"></script><script src="app/app.js"></script></body></html>
