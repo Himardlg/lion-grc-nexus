@@ -1,0 +1,1026 @@
+/* Apariencia según la skill apple-design de Emil Kowalski:
+   materiales translúcidos, tipografía del sistema, acento amarillo Lion,
+   respuesta al pulsar y movimiento reducido. Iconos: Lucide. */
+
+.shell {
+  --accent: #feca06;
+  --accent-press: #e5b400;
+  --accent-ink: #8a6200;
+  --on-accent: #1d1d1f;
+  --accent-faint: #fff6cc;
+  --surface: #ffffff;
+  --bg: #f5f5f7;
+  --text: #1d1d1f;
+  --muted: #6e6e73;
+  --line: rgba(60, 60, 67, 0.12);
+  --fill: rgba(120, 120, 128, 0.12);
+  --green: #248a3d;
+  --orange: #b25000;
+  --red: #d70015;
+  --material: rgba(246, 246, 248, 0.78);
+  --shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  color: var(--text);
+}
+.shell.theme-oscuro {
+  --accent: #feca06;
+  --accent-press: #ffe14a;
+  --accent-ink: #feca06;
+  --on-accent: #1d1d1f;
+  --accent-faint: #2a2410;
+  --surface: #1c1c1e;
+  --bg: #000000;
+  --text: #f5f5f7;
+  --muted: #98989d;
+  --line: rgba(255, 255, 255, 0.12);
+  --fill: rgba(120, 120, 128, 0.24);
+  --green: #30d158;
+  --orange: #ff9f0a;
+  --red: #ff453a;
+  --material: rgba(28, 28, 30, 0.78);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  color: var(--text);
+}
+
+body {
+  background: #f5f5f7;
+  color: #1d1d1f;
+  font: 15px/1.47 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.shell.theme-oscuro,
+.shell.theme-oscuro main { background: #000; color: #f5f5f7; }
+
+.shell header h1,
+.shell .ini-hero h1,
+.shell .wheelcopy h2 {
+  letter-spacing: -0.022em;
+  font-weight: 600;
+  line-height: 1.08;
+}
+.shell header .k,
+.shell .eyebrow,
+.shell .k {
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: var(--accent-ink) !important;
+}
+
+.ico {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  display: inline-block;
+  vertical-align: -3px;
+}
+.shell aside nav {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.shell aside nav::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+.shell aside nav a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text) !important;
+}
+.shell aside nav a b {
+  width: 16px !important;
+  min-width: 16px;
+  height: 16px;
+  margin: 0;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  color: inherit !important;
+  font-size: 0 !important;
+}
+.shell aside nav a.on {
+  background: var(--accent-faint) !important;
+  color: var(--accent-ink) !important;
+  font-weight: 600;
+}
+.shell aside {
+  width: 252px;
+  background: var(--material);
+  color: var(--text);
+  border-right: 1px solid var(--line);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.45);
+  transition: width 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.shell.bar-shut aside {
+  width: 56px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+.shell.bar-shut aside > :not(.logo):not(nav) { display: none; }
+.shell.bar-shut aside nav a {
+  justify-content: center;
+  gap: 0;
+  padding: 8px 0;
+  font-size: 0;
+  line-height: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.shell.bar-shut aside nav a b {
+  width: 18px !important;
+  min-width: 18px;
+  height: 18px;
+}
+.shell.bar-shut aside nav a .ico { width: 18px; height: 18px; }
+.shell .logo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+.shell .logo .mark { width: 36px; height: 36px; flex: none; display: block; object-fit: contain; }
+.shell.bar-shut .logo { flex-direction: column; justify-content: center; gap: 6px; }
+.shell.bar-shut .logo .mark { width: 28px; height: 28px; }
+.shell.bar-shut .logoname { display: none; }
+.shell .logoname { font-weight: 600; white-space: nowrap; }
+.shell .bartoggle .ico { animation: barnudge 1.4s ease-in-out infinite; }
+.shell.bar-shut .bartoggle .ico { animation-name: barnudge-open; }
+@keyframes barnudge {
+  0%, 100% { transform: rotate(-90deg) translateY(1px); }
+  50% { transform: rotate(-90deg) translateY(-3px); }
+}
+@keyframes barnudge-open {
+  0%, 100% { transform: rotate(90deg) translateY(1px); }
+  50% { transform: rotate(90deg) translateY(-3px); }
+}
+.shell .logo span { color: #feca06 !important; margin-left: 0.28em; }
+.shell.theme-oscuro .logo span { color: #feca06 !important; }
+.shell aside .activeorg { border-color: var(--line) !important; }
+.shell aside .sidebottom { border-top: 0 !important; margin-top: 0; }
+.shell .dockbar {
+  margin-top: auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 22px;
+  flex: none;
+}
+.shell .dockbar::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--line);
+}
+.shell .docktoggle,
+.shell .bartoggle {
+  position: relative;
+  z-index: 1;
+  width: 28px;
+  height: 16px;
+  padding: 0;
+  border: 0 !important;
+  border-radius: 999px;
+  background: var(--surface) !important;
+  color: var(--accent-ink) !important;
+  box-shadow: 0 0 0 1px var(--line);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.shell .docktoggle .ico {
+  width: 14px;
+  height: 14px;
+  animation: docknudge 1.4s ease-in-out infinite;
+}
+.shell.dock-shut .docktoggle .ico { animation-name: docknudge-down; }
+@keyframes docknudge {
+  0%, 100% { transform: translateY(1px); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes docknudge-down {
+  0%, 100% { transform: rotate(180deg) translateY(1px); }
+  50% { transform: rotate(180deg) translateY(-3px); }
+}
+.shell .sidedock {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.shell.dock-shut .sidedock { grid-template-rows: 0fr; }
+.shell .dockinner { overflow: hidden; min-height: 0; }
+.shell .sidedock footer { margin-top: 0; }
+.shell aside .activeorg small,
+.shell aside footer,
+.shell aside .profilemini small { color: var(--muted) !important; }
+.shell aside .orgselector {
+  background: var(--fill) !important;
+  color: var(--text) !important;
+  border: 0 !important;
+  border-radius: 10px;
+}
+.shell aside .orgselector b {
+  color: var(--muted) !important;
+  background: transparent !important;
+}
+.shell .sidetoggles { display: grid; gap: 6px; margin: 6px 0 8px; }
+.shell .segrow { display: grid; grid-template-columns: 1fr 32px; gap: 6px; align-items: stretch; }
+.shell .seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  padding: 2px;
+  background: var(--fill);
+  border-radius: 10px;
+}
+.shell .seg .segbtn {
+  background: transparent !important;
+  color: var(--muted) !important;
+  border: 0 !important;
+  border-radius: 8px;
+  padding: 6px 4px;
+  min-height: 30px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  box-shadow: none;
+}
+.shell .seg .segbtn .ico { width: 14px; height: 14px; }
+.shell .seg .segbtn.on {
+  background: var(--surface) !important;
+  color: var(--accent-ink) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+.shell .seg .segbtn:hover { filter: none; }
+.shell .seg .segbtn:active { transform: none; }
+.shell .segrow .themegear {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  border-radius: 10px;
+  background: var(--fill) !important;
+  color: var(--muted) !important;
+  text-decoration: none;
+}
+.shell .segrow .themegear:hover { color: var(--text) !important; }
+.sidebar-compact .seg .segbtn span { display: none; }
+.shell aside .sideitem {
+  color: var(--text) !important;
+  border-radius: 8px;
+}
+.shell aside .sideitem:hover,
+.shell aside .profilemini:hover {
+  background: var(--fill) !important;
+  color: var(--text) !important;
+}
+.shell aside .profilemini { color: var(--text) !important; }
+.shell aside .profilemini > span,
+.shell .profilebig {
+  background: var(--accent) !important;
+  color: var(--on-accent) !important;
+}
+.shell aside .searchbtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--fill);
+  border: 0;
+  border-radius: 10px;
+  color: var(--muted);
+  font-weight: 500;
+}
+.shell aside .searchbtn kbd { float: none; margin-left: auto; }
+
+.shell main > header,
+.shell header {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--line);
+}
+.shell.theme-oscuro header {
+  background: rgba(28, 28, 30, 0.72);
+}
+.shell header p,
+.shell .muted { color: var(--muted); }
+
+.shell button:not(.secondary):not(.themebtn):not(.searchbtn):not(.danger):not(.pn-chip):not(.segbtn):not(.docktoggle):not(.bartoggle):not(.navopen):not(.navback) {
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+  border-radius: 10px;
+  transition: transform 100ms ease-out, background-color 120ms ease-out;
+}
+.shell .orgmenu button,
+.shell .profilemenu button,
+.shell .wheelsegments button,
+.shell .wheelcenter button {
+  background: transparent !important;
+  color: inherit;
+  box-shadow: none;
+}
+.shell .wheelsegments button,
+.shell .wheelcenter button { color: #fff; }
+.shell .wheelsegments button:active,
+.shell .wheelcenter button:active { transform: none; }
+.shell .orgmenu button:hover,
+.shell .profilemenu button:hover,
+.shell .orgmenu a:hover,
+.shell .profilemenu a:hover {
+  background: var(--fill) !important;
+  color: var(--text) !important;
+}
+.shell button:not(.secondary):not(.themebtn):not(.searchbtn):not(.danger):not(.pn-chip):not(.segbtn):not(.docktoggle):not(.bartoggle):not(.navopen):not(.navback):hover {
+  filter: none;
+  background: var(--accent-press);
+}
+.shell button:not(.secondary):not(.themebtn):not(.segbtn):not(.docktoggle):not(.bartoggle):not(.navopen):not(.navback):active {
+  transform: scale(0.97);
+}
+.shell .secondary,
+.shell .buttonlink {
+  background: var(--fill) !important;
+  color: var(--text) !important;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.shell .danger {
+  background: color-mix(in srgb, var(--red) 12%, transparent) !important;
+  color: var(--red) !important;
+}
+.shell .panel,
+.shell .fw,
+.shell .ctl,
+.shell .homecard,
+.shell .statepanel,
+.shell .equivcard,
+.shell .reqcard,
+.shell .controlcard,
+.shell .riskcard,
+.shell .detailmain,
+.shell .detailaside,
+.shell .companytop,
+.shell .companycard,
+.shell .settingcard,
+.shell .notice,
+.shell .summary,
+.shell .ini-steps > div,
+.shell .ini-norms a,
+.shell .pn-kpis > div,
+.shell .pn-chip,
+.shell .wiz,
+.shell .mappingreview,
+.shell .librarylist article,
+.shell .controlrow,
+.shell .equivmatrix article {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--line);
+  border-radius: 12px;
+}
+.shell .homecard.featured,
+.shell .score,
+.shell .profilehero,
+.shell .libraryhero,
+.shell .needhero div,
+.shell .equivhero div,
+.shell .nexuswheel {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+.shell .score > strong,
+.shell .needhero b,
+.shell .equivhero b,
+.shell .companytop b,
+.shell .stat b,
+.shell .pn-kpis b {
+  color: var(--accent-ink);
+}
+.shell .score > span,
+.shell .score p,
+.shell .homecard.featured p,
+.shell .homecard p,
+.shell .profilehero p,
+.shell .profilehero small,
+.shell .libraryhero p,
+.shell .libraryhero .eyebrow,
+.shell .needhero small,
+.shell .needhero span,
+.shell .equivhero span,
+.shell .wheelcopy p,
+.shell .wheelhint small {
+  color: var(--muted) !important;
+}
+.shell .bar { background: var(--fill); }
+.shell .bar i,
+.shell .wheel-dot { background: var(--accent); box-shadow: none; }
+.shell .libraryhero > a {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: 980px;
+  font-weight: 600;
+}
+.shell .nexuswheel:after { display: none; }
+.shell .wheel {
+  background: conic-gradient(from -22.5deg, #feca06 0 45deg, #2a2410 45deg 90deg, #c9a008 90deg 135deg, #1d1c1e 135deg 180deg, #e5b400 180deg 225deg, #241f0c 225deg 270deg, #d4ab0a 270deg 315deg, #2f2a14 315deg 360deg);
+  border-color: #1d1d1f;
+}
+.shell .wheelpointer { border-top-color: var(--text); }
+.shell .wheelcenter { background: #1d1c1e; border-color: var(--accent); }
+.shell .wheelcenter span,
+.shell .wheelcenter b { color: #fff; }
+.shell .fwtabs,
+.shell .librarytabs,
+.shell .settingsnav {
+  background: var(--fill);
+  border: 0;
+  border-radius: 10px;
+}
+.shell .fwtabs a,
+.shell .librarytabs a,
+.shell .settingsnav a { color: var(--muted); font-weight: 600; border-radius: 8px; }
+.shell .fwtabs a.on,
+.shell .librarytabs a.on,
+.shell .settingsnav a.on {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+.shell .ini-steps b,
+.shell .wiz li.now span {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: var(--on-accent) !important;
+}
+.shell .pn-chip {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--line) !important;
+  font-weight: 600;
+  text-align: left;
+}
+.shell .pn-chip.on {
+  border-color: var(--accent) !important;
+  background: var(--accent-faint) !important;
+  color: var(--text) !important;
+}
+.shell .fw.sel,
+.shell .companycard.active { border-color: var(--accent); }
+.shell .companyavatar {
+  background: var(--accent-faint) !important;
+  color: var(--accent-ink) !important;
+}
+.shell .save-status {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  background: var(--material);
+  color: var(--accent-ink);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(16px);
+}
+.shell .save-status.error { color: var(--red); background: color-mix(in srgb, var(--red) 10%, var(--surface)); }
+.shell .form input:not([type=checkbox]),
+.shell .form select,
+.shell .toolbar input,
+.shell .toolbar select,
+.shell .settingcard select,
+.shell .nxs-box input {
+  border-radius: 10px;
+  border-color: var(--line);
+  background: var(--surface);
+  color: var(--text);
+}
+.shell .form input:not([type=checkbox]):focus,
+.shell .form select:focus,
+.shell .toolbar input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
+  border-color: var(--accent);
+}
+.clickable:focus-visible,
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent-ink, #8a6200);
+  outline-offset: 2px;
+}
+.shell.theme-claro main .panel a:not([class]),
+.shell.theme-claro main :is(.pn-lead, .pn-guide, .empty, .ini-links) a,
+.shell .detailaside a,
+.shell .quick a,
+.shell .eqreqs a,
+.shell .mappingcols a,
+.shell .mappingedit summary {
+  color: var(--accent-ink);
+}
+.shell .quick { background: var(--fill); }
+.shell .target,
+.shell .profileprefs,
+.shell .pn-req,
+.shell .requirement-edit { background: var(--fill); }
+.shell .pn-req.cubierto { border-color: var(--green); }
+.shell .pn-req.parcial { border-color: var(--orange); }
+.shell .pn-req.gap { border-color: var(--red); }
+.shell .reqstatus.cubierto strong,
+.shell .detailstatus.cubierto b,
+.shell .mapreqs strong.cubierto { color: var(--green) !important; }
+.shell .reqstatus.parcial strong,
+.shell .detailstatus.parcial b,
+.shell .mapreqs strong.parcial { color: var(--orange) !important; }
+.shell .reqstatus.gap strong,
+.shell .detailstatus.gap b,
+.shell .mapreqs strong.gap { color: var(--red) !important; }
+.shell .pillok,
+.shell .linked small.chip.full,
+.shell .strength.full,
+.shell .reviewbadge.validated { background: color-mix(in srgb, var(--green) 16%, transparent); color: var(--green); }
+.shell .linked small.chip.part,
+.shell .strength.partial,
+.shell .reviewbadge.needsreview { background: color-mix(in srgb, var(--orange) 16%, transparent); color: var(--orange); }
+.shell #nxs { background: rgba(0, 0, 0, 0.4); }
+.shell .nxs-box {
+  background: var(--material);
+  color: var(--text);
+  backdrop-filter: saturate(180%) blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+.shell.theme-oscuro .nxs-box { border-color: var(--line); }
+.shell #nxs-r a.on,
+.shell #nxs-r a:hover { background: var(--accent-faint); }
+.shell .aboutcard.featured { background: var(--accent-faint); }
+.shell .aboutcard { background: var(--surface); border-color: var(--line); }
+.shell .aboutlist a,
+.shell .aboutcard a { color: var(--accent-ink); }
+.shell .pn-chip.on {
+  border-color: var(--accent) !important;
+  background: var(--accent-faint) !important;
+}
+.shell .ini-steps b {
+  background: var(--accent) !important;
+  color: var(--on-accent) !important;
+}
+.shell .ini-norms span,
+.shell .mapfw,
+.shell .eqgrid a,
+.shell .profileprefs a {
+  color: var(--accent-ink) !important;
+}
+.shell .mapfw { background: var(--accent-faint) !important; }
+.shell .mappingnotice {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  border-left-color: var(--accent);
+  background: var(--accent-faint);
+  color: var(--text);
+}
+.shell .stat b,
+.shell .score > strong,
+.shell .needhero b,
+.shell .equivhero b { color: var(--accent) !important; }
+.shell .fwtabs a.on,
+.shell .librarytabs a.on,
+.shell .settingsnav a.on {
+  background: var(--text) !important;
+  color: var(--accent) !important;
+}
+.shell .orgselector b { color: var(--accent) !important; }
+.shell .homecard span { color: var(--accent-ink) !important; }
+.shell .fileimportlabel:focus-within { outline-color: var(--accent); }
+
+@media (prefers-reduced-transparency: reduce) {
+  .shell aside,
+  .shell header,
+  .shell .save-status,
+  .shell .nxs-box {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shell .wheel { transition: none; }
+  .shell button:active { transform: none; }
+  .shell .docktoggle .ico,
+  .shell .bartoggle .ico { animation: none; }
+  .shell.dock-shut .docktoggle .ico { transform: rotate(180deg); }
+  .shell .bartoggle .ico { transform: rotate(-90deg); }
+  .shell.bar-shut .bartoggle .ico { transform: rotate(90deg); }
+  .shell .sidedock,
+  .shell aside { transition: none; }
+}
+@media (prefers-contrast: more) {
+  .shell aside,
+  .shell .panel,
+  .shell .homecard,
+  .shell button { border: 1px solid var(--text); }
+}
+
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  background: #000;
+  display: block;
+}
+.boot video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  background: #000;
+  display: block;
+}
+@media (max-width: 480px) {
+  .boot,
+  .boot video {
+    transition: background-color 0.9s linear;
+  }
+  .boot.boot-yellow,
+  .boot.boot-yellow video {
+    background: #f3bc25;
+  }
+}
+.bootbar {
+  position: absolute;
+  right: 16px;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: auto;
+  display: flex;
+  gap: 8px;
+  z-index: 1;
+}
+.bootbar button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font: 600 14px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+.bootbar button:hover { filter: none; background: rgba(0, 0, 0, 0.62); }
+.boot-out { opacity: 0; transition: opacity 400ms ease; pointer-events: none; }
+.navopen,
+.navback { display: none; }
+
+@media (max-width: 480px) {
+  .bootbar button {
+    border-color: rgba(29, 29, 31, 0.28);
+    background: rgba(29, 29, 31, 0.55);
+    color: #fff;
+  }
+  .bootbar button:hover {
+    background: rgba(29, 29, 31, 0.7);
+  }
+  .bootbar {
+    left: 12px;
+    right: 12px;
+    justify-content: flex-end;
+  }
+  .shell { display: block; min-height: 100dvh; }
+  .shell aside,
+  .shell.bar-shut aside {
+    position: fixed;
+    z-index: 60;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(300px, calc(100vw - 48px));
+    height: 100dvh;
+    max-height: 100dvh;
+    transform: translateX(-110%);
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: var(--shadow);
+  }
+  .shell.nav-open aside,
+  .shell.nav-open.bar-shut aside {
+    transform: none;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .shell .bartoggle { display: none; }
+  .shell .navopen {
+    display: inline-flex;
+    position: fixed;
+    z-index: 45;
+    top: max(10px, env(safe-area-inset-top));
+    left: 10px;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--material);
+    color: var(--text);
+    box-shadow: var(--shadow);
+  }
+  .shell.nav-open .navopen { visibility: hidden; }
+  .shell .navback {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: rgba(0, 0, 0, 0.35);
+  }
+  .shell.nav-open .navback { display: block; }
+  .shell main { width: 100%; min-width: 0; overflow-x: hidden; }
+  .shell header,
+  .shell main > header {
+    padding: 16px 16px 18px 58px;
+  }
+  .shell header h1 { font-size: 26px; }
+  .shell .panelhead { flex-direction: column; align-items: stretch; gap: 10px; }
+  .shell .panelhead h2 { margin: 0; }
+  .shell .panelhead select,
+  .shell select,
+  .shell input,
+  .shell textarea { max-width: 100%; }
+  .shell .toolbar { flex-wrap: wrap; }
+  .shell .toolbar input,
+  .shell .bar { width: 100%; max-width: 100%; }
+  .shell .score { flex-wrap: wrap; }
+  .shell .score > strong { font-size: 48px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .boot-out { transition: none; }
+  .boot,
+  .boot video { transition: none !important; }
+  .shell aside { transition: none; }
+}
+
+/* ==========================================================================
+   Design System v2 (feature/design-v2)
+   Continúa la dirección Apple ya iniciada: mismo acento amarillo Lion, mismos
+   materiales y tipografía del sistema. Añade escala de tokens (tipo, espacio,
+   radios, elevación, movimiento), contraste ~7:1 y jerarquía de botones.
+   Ámbito: solo el área de contenido (main). Sidebar e intro no se tocan.
+   ========================================================================== */
+.shell main {
+  /* Paleta (5): neutro fondo, superficie, texto, texto secundario, acento */
+  --muted: #4f4f54;          /* 7.6:1 sobre #fff */
+  --accent-ink: #6b4c00;     /* 8.2:1 sobre #fff · texto de acento */
+  --green: #176229;
+  --orange: #8f4000;
+  --red: #a8000f;
+  --ds-ok: #2f7d3e;
+  --ds-mid: #feca06;
+  --ds-track: rgba(120, 120, 128, 0.16);
+  /* Tipografía */
+  --fs-xs: 12px; --fs-sm: 13px; --fs-md: 15px; --fs-lg: 17px; --fs-xl: 21px; --fs-2xl: 28px; --fs-3xl: 34px;
+  /* Espaciado (base 4) */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px; --sp-7: 48px;
+  /* Radios y elevación */
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-pill: 980px;
+  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.04), 0 0 0 1px var(--line);
+  --elev-2: 0 6px 20px rgba(0, 0, 0, 0.06), 0 0 0 1px var(--line);
+  /* Movimiento */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --dur-1: 120ms; --dur-2: 200ms;
+  --focus: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent);
+  background: var(--bg);
+}
+.shell.theme-oscuro main {
+  --muted: #b4b4b9;          /* 8:1 sobre #1c1c1e */
+  --accent-ink: #feca06;
+  --green: #4cd964;
+  --orange: #ffb340;
+  --red: #ff8a80;
+  --ds-ok: #3fb950;
+  --ds-track: rgba(120, 120, 128, 0.28);
+  --elev-1: 0 0 0 1px var(--line);
+  --elev-2: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--line);
+  background: #000;
+}
+
+/* Tipografía jerárquica */
+.shell main header h1 { font-size: var(--fs-3xl); }
+.shell main header p { font-size: var(--fs-md); line-height: 1.5; }
+.shell main h2 { letter-spacing: -0.012em; font-weight: 600; }
+.shell main small, .shell main .eyebrow { font-size: var(--fs-xs); }
+.shell main .eyebrow, .shell main header .k { text-transform: uppercase; }
+.shell main p { text-wrap: pretty; }
+
+/* Superficies: borde de 1px por sombra, sin bloques de color plano */
+.shell main .panel,
+.shell main .ctl,
+.shell main .controlcard,
+.shell main .reqcard,
+.shell main .equivcard,
+.shell main .homecard,
+.shell main .statepanel,
+.shell main .riskcard,
+.shell main .pn-kpis > div {
+  border: 0;
+  border-radius: var(--r-lg);
+  box-shadow: var(--elev-1);
+}
+.shell main .homecard,
+.shell main .controlcard,
+.shell main .reqcard {
+  transition: box-shadow var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .shell main .homecard:hover,
+  .shell main .controlcard:hover,
+  .shell main .reqcard:hover { box-shadow: var(--elev-2); transform: translateY(-1px); }
+}
+.shell main .pn-kpis b { font-size: var(--fs-2xl); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.shell main .pn-kpis span, .shell main .pn-kpis small { color: var(--muted); }
+
+/* Etiquetas (chips) neutras */
+.shell main .tags span,
+.shell main .ctxt span,
+.shell main .reqtop span,
+.shell main .mapreqs span {
+  background: var(--fill);
+  color: var(--text);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Barras de cobertura: verde sobrio + acento, pista neutra */
+.shell main .pn-bar,
+.shell main .bar { background: var(--ds-track); height: 8px; border-radius: var(--r-pill); }
+
+/* Jerarquía de botones
+   primario = sólido acento · secundario = neutro relleno · terciario = outline */
+.shell main button,
+.shell main .buttonlink {
+  min-height: 36px;
+  padding: 0 var(--sp-4);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  border-radius: var(--r-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform var(--dur-1) var(--ease-out), background-color var(--dur-1) var(--ease-out), box-shadow var(--dur-1) var(--ease-out);
+}
+.shell main button.pn-chip { border-radius: var(--r-md); justify-content: flex-start; }
+.shell main .secondary { background: var(--fill) !important; color: var(--text) !important; border: 0 !important; }
+.shell main .secondary:hover { background: color-mix(in srgb, var(--text) 14%, transparent) !important; }
+.shell main button.tertiary {
+  background: transparent !important;
+  color: var(--text) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 28%, transparent) !important;
+  border: 0 !important;
+}
+.shell main button.tertiary:hover {
+  background: var(--fill) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 45%, transparent) !important;
+}
+.shell main .pn-btns button:not(.secondary) { background: var(--accent); color: var(--on-accent); }
+.shell main .pn-btns { gap: var(--sp-2); justify-content: flex-start; }
+.shell main button:active { transform: scale(0.97); }
+
+/* Foco visible y consistente */
+.shell main :is(button, a, input, select, textarea, summary):focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+.shell main input:not([type=checkbox]):not([type=radio]),
+.shell main select,
+.shell main textarea {
+  min-height: 36px;
+  border-radius: var(--r-sm);
+  border: 1px solid color-mix(in srgb, var(--text) 18%, transparent);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--fs-sm);
+}
+
+/* Estado de guardado: discreto, en texto secundario */
+.shell main .save-status { color: var(--muted); font-size: var(--fs-xs); font-weight: 500; }
+
+@media (max-width: 480px) {
+  .shell main header h1 { font-size: var(--fs-2xl); }
+  .shell main .panel,
+  .shell main .ctl,
+  .shell main .controlcard { border-radius: var(--r-md); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shell main *, .shell main *::before, .shell main *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+  .shell main button:active { transform: none; }
+  .shell main .homecard:hover, .shell main .controlcard:hover, .shell main .reqcard:hover { transform: none; }
+}
+
+/* Menú inferior (móvil) — estructura de Rosetta (barra de pestañas + hoja «Más»)
+   con tokens de Nexus: acento amarillo Lion y claro/oscuro existentes. */
+.shell .tabbar, .shell .bsheet, .shell .bsheet-back { display: none; }
+@media (max-width: 480px) {
+  .shell main { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+  .shell .tabbar {
+    display: flex; position: fixed; z-index: 40; left: 12px; right: 12px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px)); height: 64px; padding: 6px; gap: 2px;
+    border-radius: 26px; background: var(--material); color: var(--text);
+    -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid var(--line); box-shadow: var(--shadow);
+  }
+  .shell .tabbar .tb-i {
+    all: unset; box-sizing: border-box; flex: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 3px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    color: var(--muted); cursor: pointer; -webkit-tap-highlight-color: transparent;
+    transition: background-color 120ms ease-out, transform 100ms ease-out;
+  }
+  .shell .tabbar .tb-i .ico { width: 20px; height: 20px; }
+  .shell .tabbar .tb-i[aria-current="page"],
+  .shell .tabbar .tb-more[aria-expanded="true"] { background: var(--accent-faint); color: var(--accent-ink); }
+  .shell.theme-oscuro .tabbar .tb-i[aria-current="page"],
+  .shell.theme-oscuro .tabbar .tb-more[aria-expanded="true"] { color: var(--accent); }
+  .shell .tabbar .tb-i:active { transform: scale(0.96); }
+  .shell .bsheet-back { display: block; position: fixed; inset: 0; z-index: 41; background: rgba(0, 0, 0, 0.32); animation: bs-fade 200ms ease-out; }
+  .shell .bsheet {
+    display: block; position: fixed; z-index: 42; left: 12px; right: 12px;
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px)); padding: 14px; border-radius: 28px;
+    background: var(--material); color: var(--text);
+    -webkit-backdrop-filter: saturate(180%) blur(24px); backdrop-filter: saturate(180%) blur(24px);
+    border: 1px solid var(--line); box-shadow: var(--shadow);
+    transform-origin: bottom center; animation: bs-rise 240ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .shell .bs-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .shell .bs-grid a {
+    display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 6px;
+    border-radius: 16px; background: var(--surface); box-shadow: 0 0 0 1px var(--line);
+    color: var(--text); text-decoration: none; font-size: 12px; font-weight: 500; text-align: center;
+  }
+  .shell .bs-grid a .ico { width: 20px; height: 20px; }
+  .shell .bs-grid a[aria-current="page"] { background: var(--accent-faint); color: var(--accent-ink); }
+  .shell.theme-oscuro .bs-grid a[aria-current="page"] { color: var(--accent); }
+  .shell .bs-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+  .shell .bs-seg { display: flex; gap: 2px; padding: 2px; border-radius: 999px; background: var(--fill); }
+  .shell .bsheet button {
+    all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  }
+  .shell .bs-seg button { min-width: 44px; height: 32px; border-radius: 999px; font-size: 12px; font-weight: 600; color: var(--muted); }
+  .shell .bs-seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12); }
+  .shell .bsheet .bs-theme { position: relative; width: 64px; height: 34px; border-radius: 999px; background: var(--fill); color: var(--muted); justify-content: space-between; padding: 0 9px; }
+  .shell .bs-theme > .ico { width: 14px; height: 14px; }
+  .shell .bs-theme .knob {
+    position: absolute; top: 3px; left: 3px; width: 28px; height: 28px; border-radius: 50%;
+    display: grid; place-items: center; background: var(--accent); color: var(--on-accent);
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .shell .bs-theme[aria-checked="true"] .knob { transform: translateX(30px); }
+  .shell .bs-theme .knob .ico { width: 15px; height: 15px; }
+  .shell .tabbar .tb-i:focus-visible, .shell .bs-grid a:focus-visible, .shell .bsheet button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+}
+@keyframes bs-rise { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes bs-fade { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .shell .bsheet, .shell .bsheet-back { animation: none; }
+  .shell .bs-theme .knob, .shell .tabbar .tb-i { transition: none; }
+  .shell .tabbar .tb-i:active { transform: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .shell .tabbar, .shell .bsheet { background: var(--surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@media print { .shell .tabbar, .shell .bsheet, .shell .bsheet-back { display: none !important; } }
+/* Neutraliza el estilo de botón primario global dentro del menú inferior */
+@media (max-width: 480px) {
+  .shell .tabbar .tb-more { background: transparent !important; color: var(--muted) !important; }
+  .shell .tabbar .tb-more[aria-expanded="true"] { background: var(--accent-faint) !important; color: var(--accent-ink) !important; }
+  .shell.theme-oscuro .tabbar .tb-more[aria-expanded="true"] { color: var(--accent) !important; }
+  .shell .bs-seg button { background: transparent !important; color: var(--muted) !important; }
+  .shell .bs-seg button[aria-pressed="true"] { background: var(--surface) !important; color: var(--text) !important; }
+  .shell .bsheet .bs-theme { background: var(--fill) !important; color: var(--muted) !important; }
+  .shell .tabbar .tb-more:active, .shell .bsheet button:active { transform: none; }
+}

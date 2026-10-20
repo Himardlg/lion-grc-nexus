@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mapa de correspondencia · TechServ</title>
+<style>
+  :root {
+    --ink:#17211e; --muted:#5c6b64; --line:#d5ddd4; --paper:#f4f6f2; --card:#fff;
+    --lime:#6f9a2c; --lime-soft:#e7f3d4; --amber:#9a6b12; --amber-soft:#f8efd4;
+    --gap:#9a4032; --gap-soft:#f6e4df; --out:#8b948e;
+  }
+  * { box-sizing:border-box }
+  body { margin:0; background:var(--paper); color:var(--ink); font:15px/1.5 "Segoe UI", Inter, Arial, sans-serif }
+  main { width:min(1180px, calc(100% - 32px)); margin:28px auto 64px }
+  header h1 { font-size:clamp(28px, 4vw, 40px); line-height:1.05; margin:6px 0 10px; max-width:18ch }
+  header p { margin:0; max-width:68ch; color:var(--muted) }
+  .k { font-size:11px; font-weight:800; letter-spacing:.14em; color:#4a7311 }
+  .why { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin:22px 0 8px }
+  .why article { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 14px 12px }
+  .why b { display:block; font-size:12px; letter-spacing:.04em; margin-bottom:6px }
+  .why p { margin:0; font-size:13px; color:var(--muted) }
+  .board { position:relative; margin-top:18px; background:
+      linear-gradient(#e7eee6 1px, transparent 1px),
+      linear-gradient(90deg, #e7eee6 1px, transparent 1px),
+      #fbfcf8;
+    background-size:28px 28px; border:1px solid #c9d4c8; border-radius:16px; padding:22px 22px 18px; min-height:640px }
+  .board h2 { margin:0 0 4px; font-size:18px }
+  .board .lead { margin:0 0 16px; color:var(--muted); font-size:13px; max-width:70ch }
+  svg.routes { position:absolute; inset:0; width:100%; height:100%; pointer-events:none }
+  .grid { position:relative; z-index:1; display:grid; grid-template-columns:1.15fr .95fr .8fr; gap:14px }
+  .territory { background:rgba(255,255,255,.92); border:1px solid var(--line); border-radius:12px; padding:12px }
+  .territory header { display:flex; justify-content:space-between; gap:8px; align-items:baseline; margin-bottom:8px }
+  .territory h3 { margin:0; font-size:15px }
+  .territory header span { font-size:11px; color:var(--muted) }
+  .req { border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-top:8px; background:#fff }
+  .req .top { display:flex; justify-content:space-between; gap:8px; align-items:center }
+  .req code { font-size:12px; font-weight:800 }
+  .req p { margin:4px 0 0; font-size:13px }
+  .req small { display:block; margin-top:4px; color:var(--muted); font-size:12px }
+  .tag { font-size:10px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; border-radius:999px; padding:3px 7px }
+  .tag.cubre { background:var(--lime-soft); color:#31520d }
+  .tag.parcial { background:var(--amber-soft); color:var(--amber) }
+  .tag.gap { background:var(--gap-soft); color:var(--gap) }
+  .tag.fuera { background:#eef1ef; color:var(--out) }
+  .source-wrap { position:relative; z-index:1; display:grid; grid-template-columns:minmax(280px, 460px) 1fr; gap:14px; margin-top:28px; align-items:stretch }
+  .source { background:#17211e; color:#fff; border-radius:14px; padding:16px 18px }
+  .source .k { color:#b6e06f }
+  .source h3 { margin:4px 0 6px; font-size:20px }
+  .source p { margin:0; color:#c5d0ca; font-size:13px }
+  .meter { display:flex; align-items:center; gap:12px; margin-top:14px }
+  .meter input { flex:1; accent-color:#9be22f }
+  .meter strong { font-variant-numeric:tabular-nums; min-width:9ch }
+  .readout { margin-top:8px; font-size:13px; color:#d5e7b0 }
+  .aside { background:rgba(255,255,255,.92); border:1px solid var(--line); border-radius:14px; padding:14px 16px }
+  .aside h3 { margin:0 0 8px; font-size:14px }
+  .aside ul { margin:0; padding-left:18px; color:var(--muted); font-size:13px }
+  .aside li + li { margin-top:6px }
+  .out { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:8px; margin-top:14px }
+  .out span { font-size:12px; color:var(--out); border:1px dashed #c5cdc8; border-radius:999px; padding:6px 10px; background:rgba(255,255,255,.8) }
+  @media (max-width:900px) {
+    .why, .grid, .source-wrap { grid-template-columns:1fr }
+    .board { min-height:0 }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="k">MAPA · POR QUÉ ESTE EJEMPLO</div>
+    <h1>Una política, tres normas, y un enlace que no llega a cerrar.</h1>
+    <p>TechServ es la empresa de ejemplo de Nexus: un proveedor TIC del sector público. El mapa no decora el motor. Enseña qué normas entran por ese contexto, por qué la capacidad elegida es la política de seguridad, y por qué una correspondencia parcial no se puede dar por cubierta.</p>
+  </header>
+
+  <section class="why">
+    <article>
+      <b>1 · Entidad pública</b>
+      <p>El demo marca entidad pública y categoría ENS alta. Por eso el ENS entra en el alcance. No es una preferencia visual.</p>
+    </article>
+    <article>
+      <b>2 · Criticidad alta</b>
+      <p>NIS2 entra como «entidad importante»: el motor propone revisarla. No dictamina que la empresa esté en el ámbito jurídico.</p>
+    </article>
+    <article>
+      <b>3 · ISO 27001, a propósito</b>
+      <p>El contexto no la deduce solo. El ejemplo la selecciona para poner el sistema de gestión al lado del ENS y de NIS2.</p>
+    </article>
+    <article>
+      <b>4 · Lo que queda fuera</b>
+      <p>No es entidad financiera, así que DORA no entra. No declara IA, así que ISO 42001 no entra aunque GOB-01 tenga un enlace a A.2.3.</p>
+    </article>
+  </section>
+
+  <section class="board">
+    <h2>Mapa de GOB-01 dentro del alcance de TechServ</h2>
+    <p class="lead">Se eligió esta capacidad porque es la política aprobada por la dirección: el mismo acto de gobierno aparece en las tres normas del alcance, y el ENS lo parte en dos. org.1 es equivalencia plena. org.2 es solo media, porque la política no sustituye la normativa interna.</p>
+    <svg class="routes" aria-hidden="true"></svg>
+    <div class="grid" id="territories"></div>
+    <div class="source-wrap">
+      <div class="source" id="source">
+        <div class="k">UNA SOLA EVALUACIÓN</div>
+        <h3>GOB-01 · Política de seguridad aprobada por la dirección</h3>
+        <p>En el demo queda en nivel 4, Medido, porque es un control del ENS y no cae en la excepción del ejemplo. El objetivo de TechServ es 3, Definido. A partir de ahí, subir a 5 no añade cobertura.</p>
+        <div class="meter">
+          <input id="level" type="range" min="0" max="5" value="4" aria-label="Nivel de madurez de GOB-01">
+          <strong id="levelLabel">4 · Medido</strong>
+        </div>
+        <div class="readout" id="readout"></div>
+      </div>
+      <aside class="aside">
+        <h3>Qué está diciendo el mapa</h3>
+        <ul>
+          <li>El aporte de un enlace es su peso por 1 si el nivel alcanza el objetivo, por 0,5 si es mayor que cero, y por 0 si la práctica no existe.</li>
+          <li>Un peso de 0,5 nunca llega a 1. org.2 sigue en parcial con la política en nivel 5.</li>
+          <li>Esto es el aporte de GOB-01, no el estado completo del requisito: org.1 también recibe otras capacidades.</li>
+        </ul>
+      </aside>
+    </div>
+    <div class="out">
+      <span>Fuera de alcance · ISO 42001 A.2.3, peso 0,5: TechServ no declara IA</span>
+      <span>Fuera de alcance · DORA: no es entidad financiera y GOB-01 no la alimenta</span>
+    </div>
+  </section>
+</main>
+<script type="module">
+const LEVELS = ["No existe", "Inicial", "Gestionado", "Definido", "Medido", "Optimizado"];
+const TARGET = 3;
+const LINKS = [
+  { fw: "ENS", why: "Entidad pública · categoría alta", code: "org.1", name: "Política de seguridad", w: 1, note: "La política aprobada cubre esta medida." },
+  { fw: "ENS", why: "Entidad pública · categoría alta", code: "org.2", name: "Normativa de seguridad", w: 0.5, note: "La política no sustituye el cuerpo normativo interno." },
+  { fw: "ISO 27001", why: "Seleccionada en el ejemplo", code: "Cl. 5.2", name: "Política de seguridad de la información", w: 1, note: "Equivalencia plena con la política del SGSI." },
+  { fw: "ISO 27001", why: "Seleccionada en el ejemplo", code: "A.5.1", name: "Políticas de seguridad de la información", w: 1, note: "El mismo acto, ahora como control del Anexo A." },
+  { fw: "NIS2", why: "Criticidad alta · clase importante", code: "RE 1.1", name: "Política de seguridad de redes y sistemas", w: 1, note: "Equivalencia plena con la política que pide NIS2." }
+];
+const factorOf = (level) => level >= TARGET ? 1 : level > 0 ? 0.5 : 0;
+const aporteOf = (level, w) => w * factorOf(level);
+const estadoOf = (a) => a >= 0.999 ? "cubre" : a > 0 ? "parcial" : "gap";
+const labelOf = (estado) => estado === "cubre" ? "Cubre" : estado === "parcial" ? "Parcial" : "No aporta";
+
+const host = document.querySelector("#territories");
+const groups = ["ENS", "ISO 27001", "NIS2"];
+host.innerHTML = groups.map((fw) => {
+  const items = LINKS.filter((link) => link.fw === fw);
+  return `<section class="territory" data-fw="${fw}"><header><h3>${fw}</h3><span>${items[0].why}</span></header>${items.map((link) => `<article class="req" data-code="${link.code}"><div class="top"><code>${link.code}</code><span class="tag gap">—</span></div><p>${link.name}</p><small>Peso ${link.w === 1 ? "1 · equivalencia plena" : "0,5 · cobertura parcial"}. ${link.note}</small></article>`).join("")}</section>`;
+}).join("");
+
+const svg = document.querySelector(".routes");
+const board = document.querySelector(".board");
+const input = document.querySelector("#level");
+const levelLabel = document.querySelector("#levelLabel");
+const readout = document.querySelector("#readout");
+
+function paint(level) {
+  levelLabel.textContent = `${level} · ${LEVELS[level]}`;
+  let cubren = 0, parciales = 0;
+  LINKS.forEach((link) => {
+    const estado = estadoOf(aporteOf(level, link.w));
+    if (estado === "cubre") cubren += 1;
+    if (estado === "parcial") parciales += 1;
+    const card = host.querySelector(`[data-code="${link.code}"] .tag`);
+    card.className = `tag ${estado}`;
+    card.textContent = labelOf(estado);
+  });
+  const org2 = estadoOf(aporteOf(level, 0.5));
+  readout.textContent = org2 === "gap"
+    ? "Sin práctica, ningún enlace se mueve."
+    : level >= TARGET
+      ? `${cubren} enlaces cubren. org.2 sigue en parcial: el peso 0,5 no se convierte en cobertura por subir el nivel.`
+      : `${parciales} enlaces en parcial. Todavía no se alcanza el objetivo 3, así que ni el peso 1 cierra.`;
+  draw(level);
+}
+
+function draw(level) {
+  const origin = board.getBoundingClientRect();
+  const source = document.querySelector("#source").getBoundingClientRect();
+  const x1 = source.left + 36 - origin.left;
+  const y1 = source.top - origin.top;
+  const yBus = y1 - 16;
+  const paths = LINKS.map((link) => {
+    const card = host.querySelector(`[data-code="${link.code}"]`).getBoundingClientRect();
+    const x2 = card.left + 22 - origin.left;
+    const y2 = card.bottom - origin.top;
+    const aporte = aporteOf(level, link.w);
+    const color = aporte >= 0.999 ? "#6f9a2c" : aporte > 0 ? "#b4882a" : "#c3ccc7";
+    const width = link.w === 1 ? 2.4 : 1.5;
+    const dash = link.w < 1 ? ' stroke-dasharray="6 5"' : "";
+    return `<path d="M${x2} ${y2} V${yBus} H${x1} V${y1}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linejoin="round"${dash}/>`;
+  }).join("");
+  svg.setAttribute("viewBox", `0 0 ${origin.width} ${origin.height}`);
+  svg.innerHTML = paths;
+}
+
+input.addEventListener("input", () => paint(Number(input.value)));
+addEventListener("resize", () => paint(Number(input.value)));
+paint(4);
+</script>
+</body>
+</html>

@@ -1,89 +1,61 @@
-# 🦁 Lion GRC Nexus
+# GRC Nexus 1.19.1
 
-**Herramienta local-first de gestión de cumplimiento multinorma (GRC)**
+**Herramienta local de apoyo al trabajo GRC**: evaluación multinorma, madurez, riesgos, evidencias, auditorías, correspondencias requisito–control y planes de acción.
 
-Lion GRC Nexus permite a organizaciones evaluar, planificar y hacer seguimiento
-de su postura de cumplimiento frente a las principales normativas de seguridad,
-todo desde el navegador, sin servidor y sin enviar datos a ningún sitio.
+> **Estado del producto:** versión candidata para publicación y pruebas de usuario. No es una plataforma certificadora ni un dictamen jurídico. Antes de usarla en un cliente, valida el catálogo y cada correspondencia contra la fuente oficial vigente y el alcance concreto.
 
----
+## Inicio rápido
 
-## ¿Qué hace?
+- **Sin instalación:** abre `index.html` con un navegador moderno.
+- **Versión autocontenida:** abre `dist/nexus.html`.
+- **Pruebas automatizadas:** requiere Node.js y ejecuta `npm test`.
+- **Reconstruir el HTML autocontenido:** `npm run build`.
 
-- Gestiona múltiples empresas/proyectos de forma independiente
-- Evalúa controles de seguridad con niveles de madurez (0–5)
-- Calcula automáticamente la cobertura de cada normativa
-- Identifica gaps y genera planes de acción priorizados
-- Declara aplicabilidad (SoA) por norma
-- Exporta a Excel e informe imprimible
-- Funciona 100% en el navegador — los datos nunca salen del dispositivo
+## Funcionalidades
 
-## Normativas incluidas
+- Empresas y proyectos separados en el mismo navegador.
+- Selección de marcos y evaluación de requisitos/controles.
+- Seis niveles orientativos de madurez, con criterios descriptivos.
+- Panel multinorma, comparador, matriz de correspondencias revisable y exportación CSV.
+- Riesgos, evidencias, auditorías y acciones correctivas.
+- Exportación/importación por empresa y respaldo completo de todos los proyectos.
+- Temas claro/oscuro y ajustes de experiencia.
+- Validación y normalización de datos importados; neutralización de HTML en vistas y fórmulas CSV.
 
-| Norma | Requisitos |
-|---|---|
-| ENS · RD 311/2022 | 77 |
-| ISO/IEC 27001:2022 | 118 |
-| NIS2 · Directiva 2022/2555 | 59 |
-| ISO/IEC 42001:2023 | 65 |
+## Privacidad y límites operativos
 
-115 controles unificados · 549 correspondencias ponderadas
+- La aplicación no requiere cuenta ni servidor: los datos de trabajo se almacenan en `localStorage` del navegador.
+- No hay sincronización entre usuarios o dispositivos. Los datos pueden perderse si se borra el almacenamiento del navegador o se cambia de perfil/dispositivo.
+- Exporta periódicamente un respaldo completo y guárdalo en una ubicación segura. El archivo puede contener información sensible de la organización.
+- No adjuntes contraseñas, secretos, datos personales innecesarios ni evidencias confidenciales; registra referencias a un repositorio controlado cuando sea posible.
+- La aplicación no cifra por sí misma el almacenamiento local ni los archivos de respaldo. Protege el equipo y el respaldo con los controles adecuados.
 
----
+## Método y cautelas de cumplimiento
 
-## Cómo usarlo
+Las correspondencias entre controles unificados y requisitos normativos son una ayuda de análisis. Un control común puede cubrir solo parte de un requisito; una puntuación o estado de control no demuestra automáticamente conformidad, certificación ni cumplimiento legal. Revisa especialmente los requisitos con plazos, destinatarios, excepciones, roles o evidencias específicas.
 
-Abre `dist/nexus.html` en cualquier navegador moderno. No requiere instalación
-ni conexión a internet.
+Las recomendaciones de aplicabilidad son orientativas y no sustituyen la determinación jurídica del alcance. Los textos y referencias de las normas deben verificarse frente a sus fuentes oficiales y versiones vigentes. Los textos íntegros de normas protegidas no se reproducen en el catálogo.
 
----
+## Marcos referenciados
 
-## Basado en Rosetta Multinorma
+- ISO/IEC 27001:2022 — [fuente oficial ISO](https://www.iso.org/standard/27001)
+- ISO/IEC 42001:2023 — [fuente oficial ISO](https://www.iso.org/standard/42001)
+- Esquema Nacional de Seguridad, Real Decreto 311/2022 — [BOE](https://www.boe.es/eli/es/rd/2022/05/03/311)
+- Directiva NIS2, (UE) 2022/2555 — [EUR-Lex](https://eur-lex.europa.eu/eli/dir/2022/2555/oj?locale=es)
+- DORA, Reglamento (UE) 2022/2554 — [EUR-Lex](https://eur-lex.europa.eu/eli/reg/2022/2554/oj?locale=es)
 
-El catálogo de controles, requisitos y correspondencias ponderadas que alimenta
-el motor de Nexus está construido sobre **Rosetta Multinorma**, desarrollado por
-[heindall92](https://github.com/heindall92).
+## Pruebas y calidad
 
-Rosetta es el proyecto de referencia que resuelve el problema de mapear
-requisitos entre normas de forma rigurosa y trazable. Sin ese trabajo,
-Nexus no tendría la base de datos de calidad que tiene.
+`npm test` ejecuta pruebas del motor y comprobaciones estructurales de catálogo, vistas, importaciones, madurez, exportación y casos sin empresas. Estas comprobaciones no sustituyen una prueba manual de navegador, accesibilidad con tecnología asistiva ni revisión independiente del contenido normativo.
 
-- 🔗 Repositorio Rosetta: https://github.com/heindall92/rosetta_multinorma
-- 🌐 Demo Rosetta: https://heindall92.github.io/rosetta_multinorma/
+Antes de anunciar una versión estable, prueba al menos: crear/editar/eliminar empresa; evaluar requisitos; guardar y reabrir; exportar/importar empresa; exportar/restaurar respaldo completo; probar una importación inválida; navegar con teclado; revisar en Chrome y Edge; verificar impresión e informes; y comprobar que no se envían datos a terceros.
 
----
+## Licencia y atribución
 
-## Desarrollo
+Este proyecto incorpora y adapta partes del catálogo multinorma de [Rosetta Multinorma](https://github.com/heindall92/rosetta_multinorma), cuyo repositorio declara **GNU GPL v2.0**. Se incluye la licencia GPL-2.0 y una nota de atribución. La distribución de esta versión derivada debe respetar las condiciones de la licencia; conserva el código fuente y los avisos correspondientes.
 
-Este proyecto se desarrolla en colaboración con el autor de Rosetta Multinorma.
+Los nombres y textos de las normas pertenecen a sus respectivos titulares. GRC Nexus no está afiliado ni respaldado por ISO, CCN, la Comisión Europea ni otros organismos referenciados.
 
-```
-nexus/
-├── app/          # Lógica principal (app.js, panel.js, catalog.js)
-├── assets/       # Estilos (app.css)
-├── dist/         # Build listo para usar (nexus.html)
-├── tests/        # Tests del motor (26 tests)
-├── tools/        # Build, validación y auditoría de contraste
-└── docs/         # Documentación técnica
-```
+## Historial
 
-### Ejecutar tests
-
-```bash
-node --test tests/engine.test.js
-```
-
-### Construir
-
-```bash
-node tools/build.js
-```
-
----
-
-## Licencia
-
-GNU General Public License v2.0 — ver [LICENSE](LICENSE)
-
-El catálogo está derivado de Rosetta Multinorma (GPL v2).
-Ver [NOTICE.md](NOTICE.md) para atribución completa.
+Consulta [CHANGELOG.md](CHANGELOG.md). Resumen de la 1.19.1: detalle de requisito completo (todas las capacidades, equivalencias y nivel ENS), escapado sistemático de textos y corrección de la pantalla inicial configurable.
