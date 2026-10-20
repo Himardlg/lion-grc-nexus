@@ -1024,3 +1024,90 @@ input:focus-visible {
   .shell .bsheet .bs-theme { background: var(--fill) !important; color: var(--muted) !important; }
   .shell .tabbar .tb-more:active, .shell .bsheet button:active { transform: none; }
 }
+
+/* ==========================================================================
+   Responsive y densidad (Bloque A) — solo área de contenido (main).
+   Densidad: cómoda / estándar / compacta mediante tokens del Design System v2.
+   ========================================================================== */
+.shell main { --gutter: 54px; --pad: var(--sp-5); --gap: var(--sp-3); --block: 28px; }
+.shell.density-standard main { --pad: 20px; --gap: 10px; --block: 22px; }
+.shell.density-compact main { --pad: var(--sp-4); --gap: var(--sp-2); --block: var(--sp-4); }
+
+.shell main .panel,
+.shell main .ctl,
+.shell main .controlcard,
+.shell main .reqcard,
+.shell main .equivcard,
+.shell main .needs article,
+.shell main .pn-kpis > div { padding: var(--pad); }
+.shell main .panel,
+.shell main .score,
+.shell main .needhero,
+.shell main .pn-kpis { margin-top: var(--block); margin-bottom: var(--block); }
+.shell main .reqgrid,
+.shell main .controlgrid,
+.shell main .pn-kpis { gap: var(--gap); }
+.shell main .ctl,
+.shell main .needs article,
+.shell main .equivcard { margin-bottom: var(--gap); }
+.shell.density-compact main .controlcard { min-height: 0; }
+.shell.density-compact main .line { padding: 10px 2px; }
+.shell.density-compact main header { padding-top: 26px; padding-bottom: 18px; }
+.shell.density-compact main header h1 { font-size: var(--fs-2xl); }
+.shell.density-compact main .ctxt h2,
+.shell.density-compact main .controlcard h2,
+.shell.density-compact main .reqcard h2 { font-size: var(--fs-lg); margin: 4px 0; }
+.shell.density-compact main .controlcard p,
+.shell.density-compact main .reqcard p { margin: 4px 0 8px; }
+
+/* Tablet y pantallas pequeñas: un único margen lateral y cabecera a sangre */
+@media (max-width: 1024px) {
+  .shell main { --gutter: 24px; }
+  .shell main > header,
+  .shell main header {
+    margin-left: 0; margin-right: 0;
+    padding-left: var(--gutter); padding-right: var(--gutter);
+  }
+  .shell main .panel, .shell main .fwgrid, .shell main .notice, .shell main .summary,
+  .shell main .toolbar, .shell main .needhero, .shell main .equivhero, .shell main .score,
+  .shell main .homegrid, .shell main .statepanel, .shell main .quick, .shell main .pn-kpis,
+  .shell main .pn-norms, .shell main .pn-guide, .shell main .wiz {
+    margin-left: var(--gutter); margin-right: var(--gutter);
+  }
+  .shell main .toolbar { padding-left: 0; padding-right: 0; flex-wrap: wrap; }
+  .shell main .toolbar input { flex: 1 1 240px; width: auto; }
+  .shell main #list, .shell main .needs, .shell main .equivlist,
+  .shell main .reqgrid, .shell main .controlgrid {
+    padding-left: var(--gutter); padding-right: var(--gutter); margin-left: 0; margin-right: 0;
+  }
+  .shell main .panelhead { flex-wrap: wrap; gap: var(--sp-2); }
+  .shell main .panelhead select { max-width: 100%; }
+  .shell main .pn-btns { flex-wrap: wrap; }
+  .shell main .eval { grid-template-columns: 1fr 1fr; }
+  .shell main .eval > :last-child { grid-column: 1 / -1; }
+  /* Objetivos táctiles de 44px */
+  .shell main button,
+  .shell main .buttonlink,
+  .shell main input:not([type=checkbox]):not([type=radio]),
+  .shell main select { min-height: 44px; }
+  .shell main .pn-norms a, .shell main .pn-row > a, .shell main .line a, .shell main .panel td a {
+    display: inline-flex; align-items: center; min-height: 44px;
+  }
+}
+@media (max-width: 800px) {
+  .shell main .needhero, .shell main .equivhero { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; }
+  .shell main .needhero div, .shell main .equivhero div { padding: var(--pad); }
+  .shell main .eval { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .shell main { --gutter: 16px; }
+  .shell main > header, .shell main header { padding-left: 58px; }
+  .shell main .needhero b, .shell main .equivhero b { font-size: var(--fs-2xl); }
+  .shell main .pn-kpis { grid-template-columns: 1fr 1fr; }
+  .shell main .pn-kpis > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .shell main .toolbar select { flex: 1 1 100%; }
+  .shell main .line { flex-wrap: wrap; }
+}
+@media (min-width: 481px) and (max-width: 1024px) {
+  .shell main .pn-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
