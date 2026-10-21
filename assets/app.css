@@ -193,3 +193,18 @@ footer{color:#a9b8af}
 .theme-oscuro .aboutcard p,.theme-oscuro .aboutlist{color:#c4d1c9}
 .theme-oscuro .aboutcard code{background:rgba(255,255,255,.08);color:#e7eee9}
 .theme-oscuro .aboutmeta span{background:#26332c;color:#c4d1c9}
+
+/* Apartado B: importación SoA, demos sectoriales, alertas e informe ejecutivo */
+.demo-sector-buttons{display:flex;flex-wrap:wrap;gap:.55rem;margin:.75rem 0}
+.demo-sector-buttons button{white-space:normal}
+.nxs-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;margin:.65rem 0}
+.nxs-filters select{min-width:0;width:100%;padding:.65rem;border:1px solid var(--line,#d9dce3);border-radius:.6rem;background:var(--panel,#fff);color:inherit}
+#soa-mapping-panel .inlineform label{display:flex;flex-direction:column;gap:.35rem;min-width:180px}
+#soa-mapping-panel .tablewrap{overflow:auto;max-width:100%;margin:.8rem 0}
+#soa-mapping-panel table{border-collapse:collapse;width:100%;font-size:.9rem}
+#soa-mapping-panel th,#soa-mapping-panel td{border-bottom:1px solid var(--line,#ddd);padding:.5rem;text-align:left;max-width:22rem;overflow-wrap:anywhere}
+.exec-summary{margin-top:1.5rem;padding-top:1rem;border-top:1px solid #d9dce3}
+.exec-summary h2{margin-top:1.2rem}
+.rep-bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+@media(max-width:650px){.nxs-filters{grid-template-columns:1fr}.demo-sector-buttons{flex-direction:column}.demo-sector-buttons button{width:100%}}
+@media print{.exec-summary{break-inside:avoid}.rep-bar button,.rep-bar a{display:none!important}}
