@@ -326,4 +326,5 @@
   if(typeof informeView==='function') informeView=executiveReportView;
   // Expose the importer as a global page helper.
   window.importSoaView=importSoaView;
+  window.executiveReportView=executiveReportView;
 })();
