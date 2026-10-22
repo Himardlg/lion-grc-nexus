@@ -34,7 +34,142 @@ function requirementCard(r){let c=ctl(r.control),s=reqState(r),l=ctx().assess[c.
 function controls(){let a=activeControls();return head('06 · CONTROLES','Biblioteca de capacidades','Los controles son la unidad de gestión de Nexus: se evalúan una vez y pueden alimentar varios requisitos y normas.')+`<div class="toolbar"><input id="cq" placeholder="Buscar control, área o norma..." oninput="filterCtl()"><select onchange="filterCtlFw(this.value)"><option value="">Todas las normas</option>${ctx().selected.map(x=>`<option value="${x}">${fw(x).short}</option>`).join('')}</select></div><section class="controlgrid">${a.map(controlCard).join('')}</section>`}
 function controlCard(c){let l=ctx().assess[c.id]?.level??0,rs=activeReqs().filter(r=>usesCtl(r,c.id)),f=c.fw.filter(x=>ctx().selected.includes(x));return `<article class="controlcard" data-cq="${esc((c.name+' '+c.area+' '+c.description+' '+f.map(x=>fw(x).short).join(' ')).toLowerCase())}" data-fw="${f.join(',')}"><div class="eyebrow">${c.id} · ${esc(c.area)}</div><h2>${esc(c.name)}</h2><p>${esc(c.reason)}</p><div class="tags">${f.map(x=>`<span>${fw(x).short}</span>`).join('')}</div><div class="controlmeta"><span><b>${l}/5</b> madurez</span><span><b>${rs.length}</b> requisitos</span></div><button class="tertiary" onclick="openDetail('control','${c.id}')">Ver control completo ${icon('arrow-right')}</button></article>`}
 function current(){let a=activeControls(),c=ctx();return head('07 · SITUACIÓN ACTUAL','¿Dónde estamos?','Evalúa cada capacidad una sola vez. El resultado se reutiliza en todos los requisitos conectados.')+`<div class="toolbar"><input id="q" placeholder="Buscar control..." oninput="filter()"><select onchange="filterLevel(this.value)"><option value="">Todos los niveles</option>${levels.map((x,i)=>`<option value="${i}">${i} · ${x}</option>`).join('')}</select></div><section id="list">${a.map(x=>{let v=c.assess[x.id]||{level:0,owner:'',evidence:''};return `<article class="ctl" data-id="${x.id}" data-q="${esc((x.name+' '+x.area+' '+x.description).toLowerCase())}" data-level="${v.level}"><div class="ctxt"><small>${x.id} · ${esc(x.area)}</small><h2>${esc(x.name)}</h2><p>${esc(x.description)}</p><div>${x.fw.filter(f=>c.selected.includes(f)).map(f=>`<span>${fw(f).short}</span>`).join('')}</div></div><div class="eval"><label>Nivel<select data-field="level" onchange="setA('${x.id}','level',this.value)">${levels.map((z,i)=>`<option value="${i}" ${i===v.level?'selected':''}>${i} · ${z}</option>`).join('')}</select></label><label>Responsable<input data-field="owner" value="${esc(v.owner)}" onchange="setA('${x.id}','owner',this.value)" placeholder="Responsable"></label><label>Observación / evidencia<input data-field="evidence" value="${esc(v.evidence)}" onchange="setA('${x.id}','evidence',this.value)" placeholder="Referencia"></label><button class="save-control" onclick="saveControlEvaluation('${x.id}')">Guardar evaluación</button></div></article>`}).join('')}</section>`}
-function maturity(){let c=ctx(),m=mavg();return head('08 · MADUREZ','Medimos para priorizar','La madurez no sustituye una evaluación de conformidad; sirve para ordenar el trabajo y visualizar evolución. Cada nivel es orientativo y debe apoyarse en evidencias.')+`<div class="score"><strong>${m.toFixed(1)}</strong><span>/ 5</span><div><h2>Madurez media</h2><p>Objetivo actual: ${c.target}/5 · ${activeControls().length} capacidades evaluadas</p><div class="bar"><i style="width:${m/5*100}%"></i></div></div></div><section class="panel"><div class="panelhead"><h2>Niveles del modelo</h2><a href="#settings">Configurar modelo ${icon('arrow-right')}</a></div>${levels.map((x,i)=>`<div class="line"><div><b>${i} · ${x}</b><small>${levelCriteria[i]}</small></div>${i===c.target?'<span class="pillok">Objetivo</span>':''}</div>`).join('')}</section>`}
+
+function maturity(){
+  let c=ctx(),m=mavg();
+  let snapshots=Array.isArray(c.snapshots)?c.snapshots.slice().reverse():[];
+
+  return head(
+    '08 · MADUREZ',
+    'Medimos para priorizar',
+    'La madurez no sustituye una evaluación de conformidad; sirve para ordenar el trabajo y visualizar la evolución.'
+  )+`
+    <div class="score">
+      <strong>${m.toFixed(1)}</strong>
+      <span>/ 5</span>
+      <div>
+        <h2>Madurez media</h2>
+        <p>Objetivo actual: ${c.target}/5 · ${activeControls().length} capacidades evaluables</p>
+        <div class="bar"><i style="width:${Math.max(0,Math.min(100,m/5*100))}%"></i></div>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panelhead">
+        <h2>Niveles del modelo</h2>
+        <a href="#settings">Configurar modelo ${icon('arrow-right')}</a>
+      </div>
+      ${levels.map((x,i)=>`
+        <div class="line">
+          <div>
+            <b>${i} · ${x}</b>
+            <small>${levelCriteria[i]}</small>
+          </div>
+          ${i===c.target?'<span class="pillok">Objetivo</span>':''}
+        </div>
+      `).join('')}
+    </section>
+
+    <section class="panel">
+      <div class="panelhead">
+        <div>
+          <h2>Historial de cobertura</h2>
+          <p>Guarda una fotografía del estado actual para compararla con futuras revisiones.</p>
+        </div>
+        <button onclick="createCoverageSnapshot()">+ Guardar revisión</button>
+      </div>
+
+      ${
+        snapshots.length
+        ? `
+          <div class="needhero">
+            <div>
+              <b>${snapshots.length}/12</b>
+              <small>revisiones guardadas</small>
+            </div>
+            <div>
+              <b>${snapshots[0].coverage?.pct??0}%</b>
+              <small>última cobertura</small>
+            </div>
+            <div>
+              <b>${Number(snapshots[0].maturity||0).toFixed(1)}/5</b>
+              <small>última madurez</small>
+            </div>
+          </div>
+
+          <div class="snapshotlist">
+            ${snapshots.map((s,i)=>{
+              const cov=s.coverage||{};
+              const date=s.date?new Date(s.date):null;
+              const dateLabel=date&&!Number.isNaN(date.getTime())
+                ?date.toLocaleString('es-ES')
+                :'Fecha no disponible';
+
+              return `
+                <article class="snapshotcard">
+                  <div class="snapshothead">
+                    <div>
+                      <small>REVISIÓN ${snapshots.length-i}</small>
+                      <h3>${esc(s.label||'Revisión de cumplimiento')}</h3>
+                      <p>${esc(dateLabel)}</p>
+                    </div>
+                    <strong>${Number(cov.pct||0)}%</strong>
+                  </div>
+
+                  <div class="bar">
+                    <i style="width:${Math.max(0,Math.min(100,Number(cov.pct)||0))}%"></i>
+                  </div>
+
+                  <div class="companystats">
+                    <span><b>${Number(cov.cubierto)||0}</b> cubiertos</span>
+                    <span><b>${Number(cov.parcial)||0}</b> parciales</span>
+                    <span><b>${Number(cov.gap)||0}</b> gaps</span>
+                    <span><b>${Number(cov.no_aplica)||0}</b> no aplican</span>
+                  </div>
+
+                  <div class="snapshotfoot">
+                    <span>Madurez media: <b>${Number(s.maturity||0).toFixed(1)}/5</b></span>
+                    <span>${Number(cov.total)||0} requisitos</span>
+                  </div>
+
+                  ${
+                    i<snapshots.length-1
+                    ? `
+                      <div class="snapshotcompare">
+                        ${
+                          Number(cov.pct||0)-
+                          Number(snapshots[i+1].coverage?.pct||0)>=0
+                          ? 'Evolución respecto a la revisión anterior: +'
+                          : 'Evolución respecto a la revisión anterior: '
+                        }<b>${
+                          Number(cov.pct||0)-
+                          Number(snapshots[i+1].coverage?.pct||0)
+                        } puntos porcentuales</b>
+                      </div>
+                    `
+                    :''
+                  }
+                </article>
+              `;
+            }).join('')}
+          </div>
+        `
+        : `
+          <div class="empty">
+            Todavía no hay revisiones guardadas. Pulsa «Guardar revisión» para registrar la cobertura actual.
+          </div>
+        `
+      }
+    </section>
+  `;
+}
+
+function createCoverageSnapshot(){
+  const label=prompt('Nombre de la revisión:','Revisión de cumplimiento');
+  if(label===null)return;
+  saveCoverageSnapshot(label);
+}
+
 function needs(){let c=ctx(),a=activeControls().filter(x=>(c.assess[x.id]?.level||0)<c.target).sort((x,y)=>priority(y)-priority(x));return head('09 · QUÉ NECESITAS','Del gap a la acción','Nexus prioriza capacidades bajo objetivo y destaca las que pueden cerrar necesidades de varias normas a la vez.')+`<div class="needhero"><div><b>${a.length}</b><small>capacidades pendientes</small></div><div><b>${a.filter(x=>x.fw.filter(f=>c.selected.includes(f)).length>1).length}</b><small>multinorma</small></div><div><b>${c.target}/5</b><small>objetivo</small></div></div><section class="needs">${a.length?a.map(x=>{let p=priority(x),f=x.fw.filter(z=>c.selected.includes(z));return `<article><div><div class="eyebrow">${x.id} · prioridad ${p}</div><h2>${esc(x.name)}</h2><p>${esc(x.description)}</p><div class="tags">${f.map(z=>`<span>${fw(z).short}</span>`).join('')}</div></div><div class="right"><b>${c.assess[x.id]?.level||0}/5</b><small>${f.length} normas afectadas</small><button onclick="make('${x.id}')">Crear acción</button></div></article>`}).join(''):`<div class="empty">No hay controles bajo el nivel objetivo.</div>`}</section>`}
 function actions(){let c=ctx();return head('10 · PLAN DE ACCIÓN','Convertimos los gaps en trabajo','Acciones asociadas a capacidades y reutilizables para cerrar necesidades multinorma.')+`<section class="panel"><div class="panelhead"><h2>Acciones</h2><button onclick="auto()">Generar acciones prioritarias</button></div>${c.actions.length?c.actions.map((a,i)=>`<div class="line"><div><b>${esc(a.title)}</b><small>${esc(a.control)} · ${(a.fw||[]).map(esc).join(' · ')}</small><span class="af"><input placeholder="Responsable" value="${esc(a.owner||'')}" onchange="updateActionField(${i},'owner',this.value)"><input type="date" aria-label="Fecha límite" value="${esc(a.due||'')}" onchange="updateActionField(${i},'due',this.value)"><input placeholder="Nota" value="${esc(a.note||'')}" onchange="updateActionField(${i},'note',this.value)">${overdue(a)?'<em class="od">Vencida</em>':''}</span></div><select onchange="updateAction(${i},this.value)">${['Pendiente','En curso','Bloqueada','Completada','Verificada'].map(s=>`<option ${a.status===s?'selected':''}>${s}</option>`).join('')}</select><button class="danger" onclick="removeItem('actions',${i})">Eliminar</button></div>`).join(''):`<div class="empty">Todavía no hay acciones. Puedes generarlas desde “Qué necesitas”.</div>`}</section>`}
 function evidence(){let c=ctx();return head('11 · EVIDENCIAS','Demostrar lo que existe','Registra responsable, vigencia y revisión. No adjuntes secretos ni datos personales innecesarios; guarda aquí la referencia segura al repositorio documental.')+`<section class="panel"><div class="panelhead"><h2>Nueva evidencia</h2></div><form class="inlineform" onsubmit="addEvidence(event)"><input name="title" required placeholder="Nombre de la evidencia"><select name="control">${activeControls().map(x=>`<option value="${x.id}">${x.id} · ${esc(x.name)}</option>`).join('')}</select><input name="ref" placeholder="Ruta o enlace seguro"><input name="owner" placeholder="Responsable"><input name="reviewDate" type="date" aria-label="Fecha de revisión"><select name="status"><option>Vigente</option><option>Revisar</option><option>Obsoleta</option></select><input name="notes" placeholder="Notas de revisión"><button>Registrar evidencia</button></form></section><section class="panel">${c.evidence.length?c.evidence.map((e,i)=>`<div class="line"><div><b>${esc(e.title)}</b><small>${esc(e.control)} · ${esc(e.owner||'Sin responsable')} · ${esc(e.status||'Vigente')} · Revisar: ${esc(e.reviewDate||'Sin fecha')}<br>${esc(e.ref||'Sin referencia')}${e.notes?' · '+esc(e.notes):''}</small></div><button class="danger" onclick="removeItem('evidence',${i})">Eliminar</button></div>`).join(''):`<div class="empty">Todavía no hay evidencias registradas.</div>`}</section>`}

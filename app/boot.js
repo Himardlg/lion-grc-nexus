@@ -1,4 +1,5 @@
-// GRC Nexus — Herramienta de gestión de cumplimiento multinorma
+
+ // GRC Nexus — Herramienta de gestión de cumplimiento multinorma
 // Copyright (C) 2026  hiramyclases@gmail.com
 //
 // This program is free software: you can redistribute it and/or modify
@@ -19,7 +20,105 @@
 // Original: https://github.com/heindall92/rosetta_multinorma
 //
 // Módulo: Arranque: enrutado por hash, render y atajos.
-window.onhashchange=render;Object.assign(window,{setGap,setSoaNote,setRequirementField,saveRequirementDetails,saveControlEvaluation,updateActionField,saveCompany,newCompany,selectCompany,editCompany,deleteCompany,toggle,setA,setSoa,filter,filterLevel,filterReq,filterReqState,filterCtl,filterCtlFw,make,auto,updateAction,addEvidence,addRisk,addAudit,removeItem,openDetail,saveProfile,saveSettings,setPreference,cycleTheme,toggleSetting,toggleDock,toggleBar,toggleNav,exportCompany,importCompany,buildBackupPayload,exportBackup,restoreBackup,resetCompany});let _lastHash=null;
-function render(){const same=_lastHash===location.hash,y=window.scrollY,v={};if(!same){navOpen=false;sheetOpen=false}if(same)['q','rq','cq'].forEach(i=>{const e=document.getElementById(i);if(e)v[i]=e.value});document.getElementById('app').innerHTML=view();Object.entries(v).forEach(([i,val])=>{const e=document.getElementById(i);if(e&&val){e.value=val;e.dispatchEvent(new Event('input'))}});document.querySelectorAll('.clickable').forEach(e=>{e.tabIndex=0;e.setAttribute('role','link')});window.scrollTo(0,same?y:0);_lastHash=location.hash}
-document.addEventListener&&document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList?.contains('clickable')){e.preventDefault();e.target.click()}});
+
+window.onhashchange = render;
+
+Object.assign(window, {
+  setGap,
+  setSoaNote,
+  setRequirementField,
+  saveRequirementDetails,
+  saveControlEvaluation,
+  updateActionField,
+  saveCompany,
+  newCompany,
+  selectCompany,
+  editCompany,
+  deleteCompany,
+  toggle,
+  setA,
+  setSoa,
+  filter,
+  filterLevel,
+  filterReq,
+  filterReqState,
+  filterCtl,
+  filterCtlFw,
+  make,
+  auto,
+  updateAction,
+  addEvidence,
+  addRisk,
+  addAudit,
+  removeItem,
+
+  // Historial de cobertura
+  createCoverageSnapshot,
+  saveCoverageSnapshot,
+
+  openDetail,
+  saveProfile,
+  saveSettings,
+  setPreference,
+  cycleTheme,
+  toggleSetting,
+  toggleDock,
+  toggleBar,
+  toggleNav,
+  exportCompany,
+  importCompany,
+  buildBackupPayload,
+  exportBackup,
+  restoreBackup,
+  resetCompany
+});
+
+let _lastHash = null;
+
+function render() {
+  const same = _lastHash === location.hash;
+  const y = window.scrollY;
+  const v = {};
+
+  if (!same) {
+    navOpen = false;
+    sheetOpen = false;
+  }
+
+  if (same) {
+    ['q', 'rq', 'cq'].forEach(i => {
+      const e = document.getElementById(i);
+      if (e) v[i] = e.value;
+    });
+  }
+
+  document.getElementById('app').innerHTML = view();
+
+  Object.entries(v).forEach(([i, val]) => {
+    const e = document.getElementById(i);
+    if (e && val) {
+      e.value = val;
+      e.dispatchEvent(new Event('input'));
+    }
+  });
+
+  document.querySelectorAll('.clickable').forEach(e => {
+    e.tabIndex = 0;
+    e.setAttribute('role', 'link');
+  });
+
+  window.scrollTo(0, same ? y : 0);
+  _lastHash = location.hash;
+}
+
+document.addEventListener && document.addEventListener('keydown', e => {
+  if (
+    (e.key === 'Enter' || e.key === ' ') &&
+    e.target.classList?.contains('clickable')
+  ) {
+    e.preventDefault();
+    e.target.click();
+  }
+});
+
 render();
