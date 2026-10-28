@@ -208,3 +208,67 @@ footer{color:#a9b8af}
 .rep-bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
 @media(max-width:650px){.nxs-filters{grid-template-columns:1fr}.demo-sector-buttons{flex-direction:column}.demo-sector-buttons button{width:100%}}
 @media print{.exec-summary{break-inside:avoid}.rep-bar button,.rep-bar a{display:none!important}}
+
+/* Nexus GRC Lion: acciones de configuración y estado vacío */
+.empty-state {
+  padding: 28px;
+}
+
+.empty-state h2 {
+  margin: 0 0 12px;
+}
+
+.empty-state p {
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.empty-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.empty-state-actions button {
+  margin: 0;
+}
+
+/* Acción principal: amarillo/dorado y texto negro */
+.empty-state-actions button:not(.secondary) {
+  background: #f2c94c !important;
+  border: 1px solid #d6aa27 !important;
+  color: #171717 !important;
+  font-weight: 800;
+  border-radius: 7px;
+  padding: 10px 14px;
+}
+
+/* Acciones secundarias: conservar el aspecto de Nexus */
+.empty-state-actions button.secondary {
+  background: #edf2ef !important;
+  border: 1px solid #dfe5e1;
+  color: #4e5c55 !important;
+  border-radius: 7px;
+  padding: 10px 14px;
+}
+
+.empty-state-actions button:hover {
+  filter: brightness(0.96);
+}
+
+@media (max-width: 800px) {
+  .empty-state {
+    padding: 20px;
+  }
+
+  .empty-state-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .empty-state-actions button {
+    width: 100%;
+  }
+}

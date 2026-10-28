@@ -31,7 +31,62 @@ function equivalences(){let c=ctx(),ms=C.mappings.filter(m=>{let r=req(m.require
 function equivCard(c){let f=c.fw.filter(x=>ctx().selected.includes(x)),rs=activeReqs().filter(r=>usesCtl(r,c.id));return `<article class="equivcard"><div class="equivmain"><div class="eyebrow">${c.id} · ${esc(c.area)}</div><h2>${esc(c.name)}</h2><p>${esc(c.description)}</p><div class="tags">${f.map(x=>`<span>${fw(x).short}</span>`).join('')}</div></div><div class="equivside"><b>${f.length} norma(s)</b><small>${rs.length} requisito(s) conectado(s)</small><button onclick="openDetail('control','${c.id}')">Ver explicación ${icon('arrow-right')}</button></div></article>`}
 function requirements(){let rs=activeReqs(),cov=coverage();return head('05 · REQUISITOS','Universo consolidado de requisitos','Cada requisito tiene una explicación propia, su objetivo, el control relacionado y su estado de cobertura.')+`<div class="needhero"><div><b>${cov.total}</b><small>requisitos aplicables</small></div><div><b>${cov.cubierto}</b><small>cubiertos</small></div><div><b>${cov.parcial}</b><small>parciales</small></div><div><b>${cov.gap}</b><small>gaps</small></div></div><div class="toolbar"><input id="rq" placeholder="Buscar requisito, área o control..." oninput="filterReq()"><select onchange="filterReqState(this.value)"><option value="">Todos</option><option value="cubierto">Cubiertos</option><option value="parcial">Parciales</option><option value="gap">Gap</option><option value="no_aplica">No aplica</option></select></div><section class="reqgrid">${rs.map(requirementCard).join('')}</section>`}
 function requirementCard(r){let c=ctl(r.control),s=reqState(r),l=ctx().assess[c.id]?.level??0;return `<article class="reqcard" data-rq="${esc((r.title+' '+r.area+' '+c.name+' '+r.description).toLowerCase())}" data-state="${s}"><div><div class="reqtop"><span>${fw(r.framework).short}</span><b>${r.id}</b></div><h2>${esc(r.title)}</h2><p>${esc(r.description)}</p><small>Control unificado: <strong>${c.id} · ${esc(c.name)}</strong></small></div><div class="reqstatus ${s}"><strong>${statusLabel(s)}</strong><span>${l}/5 · objetivo ${ctx().target}</span><button onclick="openDetail('requirement','${r.id}')">Ver explicación</button></div></article>`}
-function controls(){let a=activeControls();return head('06 · CONTROLES','Biblioteca de capacidades','Los controles son la unidad de gestión de Nexus: se evalúan una vez y pueden alimentar varios requisitos y normas.')+`<div class="toolbar"><input id="cq" placeholder="Buscar control, área o norma..." oninput="filterCtl()"><select onchange="filterCtlFw(this.value)"><option value="">Todas las normas</option>${ctx().selected.map(x=>`<option value="${x}">${fw(x).short}</option>`).join('')}</select></div><section class="controlgrid">${a.map(controlCard).join('')}</section>`}
+
+function controls(){
+  const en = db.settings.language === 'en';
+  const c = ctx();
+  const a = activeControls();
+
+  if (!c || !c.selected.length || !a.length) {
+    return head(
+      en ? '06 · CONTROLS' : '06 · CONTROLES',
+      en ? 'Control library' : 'Biblioteca de capacidades',
+      en
+        ? 'Set up your company and select the applicable frameworks to display controls.'
+        : 'Configura tu empresa y selecciona las normas aplicables para visualizar los controles.'
+    ) + `
+      <section class="panel empty-state">
+        <h2>${en ? 'Continue setting up your company' : 'Continúa configurando tu empresa'}</h2>
+        <p>${en
+          ? 'Controls will appear here after you select the applicable frameworks.'
+          : 'Los controles aparecerán aquí cuando selecciones la normativa aplicable.'}</p>
+        <div class="empty-state-actions">
+          <button type="button" onclick="goTo('scope')">
+            ${en ? 'Select frameworks' : 'Seleccionar normativa'}
+            ${icon('arrow-right')}
+          </button>
+          <button type="button" class="secondary" onclick="goTo('company')">
+            ${en ? 'Configure company' : 'Configurar empresa'}
+          </button>
+          <button type="button" class="secondary" onclick="newCompany()">
+            ${icon('plus')} ${en ? 'Add company' : 'Añadir empresa'}
+          </button>
+          <button type="button" class="secondary" onclick="goTo('companies')">
+            ${en ? 'My companies' : 'Mis empresas'}
+          </button>
+        </div>
+      </section>`;
+  }
+
+  return head(
+    '06 · ' + (en ? 'CONTROLS' : 'CONTROLES'),
+    en ? 'Capability library' : 'Biblioteca de capacidades',
+    en
+      ? 'Evaluate controls once and reuse them across requirements and frameworks.'
+      : 'Evalúa los controles una sola vez y reutilízalos en los distintos requisitos y normas.'
+  ) + `
+    <div class="toolbar">
+      <input id="cq"
+        placeholder="${en ? 'Search control, area or framework...' : 'Buscar control, área o norma...'}"
+        oninput="filterCtl()">
+      <select onchange="filterCtlFw(this.value)">
+        <option value="">${en ? 'All frameworks' : 'Todas las normas'}</option>
+        ${c.selected.map(x => `<option value="${x}">${fw(x).short}</option>`).join('')}
+      </select>
+    </div>
+    <section class="controlgrid">${a.map(controlCard).join('')}</section>`;
+}
+
 function controlCard(c){let l=ctx().assess[c.id]?.level??0,rs=activeReqs().filter(r=>usesCtl(r,c.id)),f=c.fw.filter(x=>ctx().selected.includes(x));return `<article class="controlcard" data-cq="${esc((c.name+' '+c.area+' '+c.description+' '+f.map(x=>fw(x).short).join(' ')).toLowerCase())}" data-fw="${f.join(',')}"><div class="eyebrow">${c.id} · ${esc(c.area)}</div><h2>${esc(c.name)}</h2><p>${esc(c.reason)}</p><div class="tags">${f.map(x=>`<span>${fw(x).short}</span>`).join('')}</div><div class="controlmeta"><span><b>${l}/5</b> madurez</span><span><b>${rs.length}</b> requisitos</span></div><button class="tertiary" onclick="openDetail('control','${c.id}')">Ver control completo ${icon('arrow-right')}</button></article>`}
 function current(){let a=activeControls(),c=ctx();return head('07 · SITUACIÓN ACTUAL','¿Dónde estamos?','Evalúa cada capacidad una sola vez. El resultado se reutiliza en todos los requisitos conectados.')+`<div class="toolbar"><input id="q" placeholder="Buscar control..." oninput="filter()"><select onchange="filterLevel(this.value)"><option value="">Todos los niveles</option>${levels.map((x,i)=>`<option value="${i}">${i} · ${x}</option>`).join('')}</select></div><section id="list">${a.map(x=>{let v=c.assess[x.id]||{level:0,owner:'',evidence:''};return `<article class="ctl" data-id="${x.id}" data-q="${esc((x.name+' '+x.area+' '+x.description).toLowerCase())}" data-level="${v.level}"><div class="ctxt"><small>${x.id} · ${esc(x.area)}</small><h2>${esc(x.name)}</h2><p>${esc(x.description)}</p><div>${x.fw.filter(f=>c.selected.includes(f)).map(f=>`<span>${fw(f).short}</span>`).join('')}</div></div><div class="eval"><label>Nivel<select data-field="level" onchange="setA('${x.id}','level',this.value)">${levels.map((z,i)=>`<option value="${i}" ${i===v.level?'selected':''}>${i} · ${z}</option>`).join('')}</select></label><label>Responsable<input data-field="owner" value="${esc(v.owner)}" onchange="setA('${x.id}','owner',this.value)" placeholder="Responsable"></label><label>Observación / evidencia<input data-field="evidence" value="${esc(v.evidence)}" onchange="setA('${x.id}','evidence',this.value)" placeholder="Referencia"></label><button class="save-control" onclick="saveControlEvaluation('${x.id}')">Guardar evaluación</button></div></article>`}).join('')}</section>`}
 
@@ -181,7 +236,80 @@ function actions(){let c=ctx();return head('10 · PLAN DE ACCIÓN','Convertimos 
 function evidence(){let c=ctx();return head('11 · EVIDENCIAS','Demostrar lo que existe','Registra responsable, vigencia y revisión. No adjuntes secretos ni datos personales innecesarios; guarda aquí la referencia segura al repositorio documental.')+`<section class="panel"><div class="panelhead"><h2>Nueva evidencia</h2></div><form class="inlineform" onsubmit="addEvidence(event)"><input name="title" required placeholder="Nombre de la evidencia"><select name="control">${activeControls().map(x=>`<option value="${x.id}">${x.id} · ${esc(x.name)}</option>`).join('')}</select><input name="ref" placeholder="Ruta o enlace seguro"><input name="owner" placeholder="Responsable"><input name="reviewDate" type="date" aria-label="Fecha de revisión"><select name="status"><option>Vigente</option><option>Revisar</option><option>Obsoleta</option></select><input name="notes" placeholder="Notas de revisión"><button>Registrar evidencia</button></form></section><section class="panel">${c.evidence.length?c.evidence.map((e,i)=>`<div class="line"><div><b>${esc(e.title)}</b><small>${esc(e.control)} · ${esc(e.owner||'Sin responsable')} · ${esc(e.status||'Vigente')} · Revisar: ${esc(e.reviewDate||'Sin fecha')}<br>${esc(e.ref||'Sin referencia')}${e.notes?' · '+esc(e.notes):''}</small></div><button class="danger" onclick="removeItem('evidence',${i})">Eliminar</button></div>`).join(''):`<div class="empty">Todavía no hay evidencias registradas.</div>`}</section>`}
 function risks(){let c=ctx();return head('12 · RIESGOS','Conectar cumplimiento y riesgo','Registra valoración inherente, responsable, tratamiento y estado. La puntuación es una ayuda de priorización, no una valoración automática de riesgo residual.')+`<section class="panel"><form class="inlineform" onsubmit="addRisk(event)"><input name="title" required placeholder="Riesgo identificado"><select name="control">${activeControls().map(x=>`<option value="${x.id}">${x.id} · ${esc(x.name)}</option>`).join('')}</select><label>Impacto<select name="impact">${[1,2,3,4,5].map(x=>`<option>${x}</option>`).join('')}</select></label><label>Probabilidad<select name="likelihood">${[1,2,3,4,5].map(x=>`<option>${x}</option>`).join('')}</select></label><input name="owner" placeholder="Responsable del riesgo"><input name="treatment" placeholder="Tratamiento / respuesta"><select name="status"><option>Abierto</option><option>En tratamiento</option><option>Aceptado</option><option>Cerrado</option></select><button>Registrar riesgo</button></form></section><section class="riskgrid">${c.risks.length?c.risks.map((r,i)=>`<article class="riskcard"><div class="eyebrow">${esc(r.control)} · ${esc(r.status||'Abierto')}</div><h2>${esc(r.title)}</h2><p>Impacto ${r.impact} · Probabilidad ${r.likelihood} · Inherente <b>${r.impact*r.likelihood}/25</b></p><p>Responsable: ${esc(r.owner||'Sin asignar')}<br>Tratamiento: ${esc(r.treatment||'Pendiente de definir')}</p><button class="danger" onclick="removeItem('risks',${i})">Eliminar</button></article>`).join(''):`<div class="empty">Todavía no hay riesgos registrados.</div>`}</section>`}
 function audits(){let c=ctx();return head('13 · AUDITORÍA','Comprobar y verificar','Registra alcance, responsable, fecha y resumen de hallazgos. El seguimiento detallado de cada hallazgo puede vincularse a una acción correctiva.')+`<section class="panel"><form class="inlineform" onsubmit="addAudit(event)"><input name="name" required placeholder="Nombre de auditoría"><input name="scope" placeholder="Alcance / normas"><input name="owner" placeholder="Responsable"><input name="date" type="date" aria-label="Fecha de auditoría"><select name="status"><option>Planificada</option><option>En curso</option><option>Finalizada</option></select><input name="findings" placeholder="Resumen de hallazgos"><button>Registrar auditoría</button></form></section><section class="panel">${c.audits.length?c.audits.map((a,i)=>`<div class="line"><div><b>${esc(a.name)}</b><small>${esc(a.scope||'Alcance no indicado')} · ${esc(a.status)} · ${esc(a.owner||'Sin responsable')} · ${esc(a.date||'Sin fecha')}<br>${esc(a.findings||'Sin resumen de hallazgos')}</small></div><button class="danger" onclick="removeItem('audits',${i})">Eliminar</button></div>`).join(''):`<div class="empty">Todavía no hay auditorías registradas.</div>`}</section>`}
-function map(){let groups=activeControls().map(x=>({c:x,rs:activeReqs().filter(r=>usesCtl(r,x.id)),l:ctx().assess[x.id]?.level||0}));return head('14 · MAPA MULTINORMA','Una evaluación, múltiples requisitos','La trazabilidad muestra cómo un control puede cerrar varios requisitos y normas.')+`<section class="panel">${groups.map(g=>`<div class="mapblock"><div class="line"><div><b>${g.c.id} · ${esc(g.c.name)}</b><small>${g.rs.length} requisitos relacionados · nivel ${g.l}/5</small></div><div class="tags">${g.c.fw.filter(f=>ctx().selected.includes(f)).map(f=>`<span>${fw(f).short}</span>`).join('')}</div></div><div class="mapreqs">${g.rs.map(r=>`<div><span>${fw(r.framework).short}</span>${esc(r.id)} · ${esc(r.title)}<strong class="${reqState(r)}">${reqState(r)}</strong></div>`).join('')}</div></div>`).join('')}</section>`}
+
+function map(){
+  const en = db.settings.language === 'en';
+  const c = ctx();
+  const groups = activeControls().map(x => ({
+    c: x,
+    rs: activeReqs().filter(r => usesCtl(r, x.id)),
+    l: c?.assess?.[x.id]?.level || 0
+  }));
+
+  if (!c || !c.selected.length || !groups.length) {
+    return head(
+      en ? '14 · FRAMEWORK MAP' : '14 · MAPA MULTINORMA',
+      en ? 'One assessment, multiple requirements' : 'Una evaluación, múltiples requisitos',
+      en
+        ? 'Connect controls with the requirements and frameworks selected for your company.'
+        : 'Conecta los controles con los requisitos y las normas seleccionadas para tu empresa.'
+    ) + `
+      <section class="panel empty-state">
+        <h2>${en ? 'Your framework map is not ready yet' : 'Tu mapa multinorma aún no está disponible'}</h2>
+        <p>${en
+          ? 'Select the applicable frameworks to generate the traceability map. You can also continue configuring your company or create another company.'
+          : 'Selecciona la normativa aplicable para generar el mapa de trazabilidad. También puedes continuar configurando tu empresa o crear otra empresa.'}</p>
+        <div class="empty-state-actions">
+          <button type="button" onclick="goTo('scope')">
+            ${en ? 'Select frameworks' : 'Seleccionar normativa'}
+            ${icon('arrow-right')}
+          </button>
+          <button type="button" class="secondary" onclick="goTo('company')">
+            ${en ? 'Configure company' : 'Configurar empresa'}
+          </button>
+          <button type="button" class="secondary" onclick="newCompany()">
+            ${icon('plus')} ${en ? 'Add company' : 'Añadir empresa'}
+          </button>
+          <button type="button" class="secondary" onclick="goTo('companies')">
+            ${en ? 'My companies' : 'Mis empresas'}
+          </button>
+        </div>
+      </section>`;
+  }
+
+  return head(
+    '14 · ' + (en ? 'FRAMEWORK MAP' : 'MAPA MULTINORMA'),
+    en ? 'One assessment, multiple requirements' : 'Una evaluación, múltiples requisitos',
+    en
+      ? 'Traceability shows how one control can address multiple requirements and frameworks.'
+      : 'La trazabilidad muestra cómo un control puede cubrir varios requisitos y normas.'
+  ) + `
+    <section class="panel">
+      ${groups.map(g => `
+        <div class="mapblock">
+          <div class="line">
+            <div>
+              <b>${g.c.id} · ${esc(g.c.name)}</b>
+              <small>${g.rs.length} ${en ? 'related requirements' : 'requisitos relacionados'} · ${en ? 'level' : 'nivel'} ${g.l}/5</small>
+            </div>
+            <div class="tags">
+              ${g.c.fw.filter(f => c.selected.includes(f)).map(f => `<span>${fw(f).short}</span>`).join('')}
+            </div>
+          </div>
+          <div class="mapreqs">
+            ${g.rs.map(r => `
+              <div>
+                <span>${fw(r.framework).short}</span>
+                ${esc(r.id)} · ${esc(r.title)}
+                <strong class="${reqState(r)}">${reqState(r)}</strong>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </section>`;
+}
+
 function detail(){let qs=new URLSearchParams(location.hash.split('?')[1]||'');return detailContent(qs.get('type'),qs.get('id'))}
 function detailContent(type,id){if(type==='requirement'){let r=req(id);if(!r)return home();let c=ctl(r.control),s=reqState(r);return head('DETALLE · REQUISITO',esc(r.title),`${esc(fw(r.framework).name)} · ${esc(r.id)}`)+`<section class="detail"><div class="detailmain"><div class="eyebrow">${r.id} · ${fw(r.framework).short} · ${esc(r.area)}</div>${reqIntro(r)}${(()=>{const so=ctx().soa[r.id]||{},d=ctx().reqDetails?.[r.id]||{};return `<section class="requirement-edit"><h3>Evaluación y aplicabilidad</h3><p class="muted">Estos datos se guardan para este requisito y esta empresa, independientemente de la norma.</p><label>Aplicabilidad<select id="req-app-${r.id}" onchange="setSoa('${r.id}',this.value)"><option value="auto" ${so.app===undefined||so.app===null?'selected':''}>Automática / pendiente de determinar</option><option value="yes" ${so.app===true?'selected':''}>Aplica</option><option value="no" ${so.app===false?'selected':''}>No aplica</option></select></label><label>Justificación de aplicabilidad<input id="req-just-${r.id}" placeholder="Explica por qué aplica o no aplica" value="${esc(so.note||'')}" onchange="setSoaNote('${r.id}',this.value)"></label><label>Responsable<input id="req-owner-${r.id}" placeholder="Responsable del requisito" value="${esc(d.owner||'')}" onchange="setRequirementField('${r.id}','owner',this.value)"></label><label>Observaciones<textarea id="req-notes-${r.id}" rows="3" placeholder="Situación actual, decisiones, excepciones o tareas pendientes" onchange="setRequirementField('${r.id}','notes',this.value)">${esc(d.notes||'')}</textarea></label><label>Evidencia o referencia documental<input id="req-evidence-${r.id}" placeholder="Ruta, enlace o identificador de evidencia" value="${esc(d.evidence||'')}" onchange="setRequirementField('${r.id}','evidence',this.value)"></label><div class="requirement-save"><button onclick="saveRequirementDetails('${r.id}')">Guardar cambios</button><span>También se guardan automáticamente al salir de cada campo.</span></div></section>`})()}${C.mappings.find(m=>m.requirement===r.id)?.type==='partial'?`<h3>Brecha específica de la norma</h3><p>${esc(C.mappings.find(m=>m.requirement===r.id).rationale)}</p><label><input type="checkbox" ${(ctx().gapclosed||{})[r.id]?'checked':''} onchange="setGap('${r.id}',this.checked)"> Complemento específico implantado</label>`:''}<h3>Estado actual</h3><div class="detailstatus ${s}"><b>${statusLabel(s)}</b><span>Madurez ${ctx().assess[c.id]?.level??0}/5 · objetivo ${ctx().target}/5</span></div></div><aside class="detailaside"><small>TRAZABILIDAD</small><a href="#requirements">${icon('arrow-left')} Volver a requisitos</a><a href="#current">Evaluar control</a><a href="#map">Ver mapa multinorma</a></aside></section>`}let c=ctl(id);if(!c)return home();let rs=activeReqs().filter(r=>usesCtl(r,c.id)),l=ctx().assess[c.id]?.level??0;return head('DETALLE · CONTROL',c.name,`${c.id} · ${esc(c.area)}`)+`<section class="detail"><div class="detailmain"><div class="eyebrow">${c.id} · ${esc(c.area)}</div><h2>¿Qué representa?</h2><p>${esc(c.description)}</p><h3>Explicación</h3><p>${esc(c.reason)}</p><h3>Normas relacionadas</h3><div class="tags">${c.fw.filter(f=>ctx().selected.includes(f)).map(f=>`<span>${fw(f).short}</span>`).join('')}</div><h3>Requisitos conectados (${rs.length})</h3>${rs.map(r=>`<div class="linked"><b>${r.id} · ${esc(r.title)}</b><span>${fw(r.framework).short} · ${statusLabel(reqState(r))}</span><button onclick="openDetail('requirement','${r.id}')">Ver requisito ${icon('arrow-right')}</button></div>`).join('')}<h3>Estado de gestión</h3><div class="detailstatus ${l>=ctx().target?'cubierto':l?'parcial':'gap'}"><b>${l}/5 · ${levels[l]}</b><span>Objetivo ${ctx().target}/5 · ${ctx().assess[c.id]?.evidence?'Evidencia registrada':'Sin evidencia/observación indicada'}</span></div></div><aside class="detailaside"><small>TRAZABILIDAD</small><a href="#controls">${icon('arrow-left')} Volver a controles</a><a href="#current">Evaluar situación actual</a><a href="#needs">Ver necesidades</a><a href="#map">Ver mapa multinorma</a></aside></section>`}
 function about(){return head('ACERCA DE','Nexus GRC Lion v1.21.0','Licencia, atribución y créditos del proyecto.')+`<section class="aboutgrid"><article class="aboutcard featured"><div class="eyebrow">EL PROYECTO</div><h2>Nexus GRC Lion</h2><p>Herramienta local-first de gestión de cumplimiento multinorma (GRC). Corre completamente en el navegador; los datos se almacenan en <code>localStorage</code> y no salen del dispositivo.</p><div class="aboutmeta"><span><b>Versión</b> 1.19.2</span><span><b>Motor</b> Rosetta v2.2.0</span><span><b>Frameworks</b> ENS · ISO 27001 · NIS2 · ISO 42001</span></div></article><article class="aboutcard"><div class="eyebrow">LICENCIA</div><h2>GNU General Public License v2</h2><p>Este programa es software libre; puedes redistribuirlo y/o modificarlo bajo los términos de la <b>GNU General Public License</b> publicada por la Free Software Foundation, versión 2 o cualquier versión posterior.</p><p>Se distribuye con la esperanza de que sea útil, pero <b>sin ninguna garantía</b>; ni siquiera la garantía implícita de comerciabilidad o idoneidad para un propósito particular. Consulta la licencia completa para más detalles.</p><a class="buttonlink" href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank" rel="noopener">Texto completo GPL v2 ${icon('arrow-up-right')}</a></article><article class="aboutcard"><div class="eyebrow">ATRIBUCIÓN</div><h2>Rosetta Multinorma</h2><p>El catálogo de controles unificados, requisitos y correspondencias ponderadas incorporado en este proyecto (<code>app/catalog.js</code>) está derivado de <b>Rosetta Multinorma</b>, desarrollado por <b>heindall92</b> y publicado bajo GNU GPL v2.</p><ul class="aboutlist"><li>Proyecto original: <a href="https://github.com/heindall92/rosetta_multinorma" target="_blank" rel="noopener">github.com/heindall92/rosetta_multinorma</a></li><li>Demo Rosetta: <a href="https://heindall92.github.io/rosetta_multinorma/" target="_blank" rel="noopener">heindall92.github.io/rosetta_multinorma</a></li><li>Versión del catálogo incorporado: v2.2.0</li><li>Modificaciones: adaptación al modelo de datos de Nexus, integración con motor GRC, sin cambio de contenido sustantivo.</li></ul></article><article class="aboutcard"><div class="eyebrow">CONDICIONES DE DISTRIBUCIÓN</div><h2>Si compartes o redistribuyes Nexus</h2><ul class="aboutlist"><li>Debes incluir el código fuente o indicar dónde obtenerlo.</li><li>Debes conservar el fichero <code>NOTICE.md</code> con la atribución a heindall92.</li><li>Debes distribuir bajo la misma licencia GPL v2 (o compatible).</li><li>No puedes añadir restricciones adicionales sobre los derechos que la GPL otorga.</li></ul><p>Para distribución comercial o uso en contextos sensibles, considera obtener asesoramiento legal.</p></article><article class="aboutcard"><div class="eyebrow">AVISO IMPORTANTE</div><h2>Limitaciones de uso</h2><p>Nexus es una herramienta de apoyo a la gestión GRC. <b>No sustituye</b> la auditoría formal, la consultoría especializada ni la certificación oficial. Las evaluaciones generadas son orientativas.</p><p>No almacenes en Nexus secretos, contraseñas completas ni documentos confidenciales íntegros. Los datos quedan en el navegador sin cifrado ni control de acceso.</p></article><article class="aboutcard"><div class="eyebrow">CÓDIGO FUENTE</div><h2>Distribución del código</h2><p>De acuerdo con GPL v2, el código fuente de GRC Nexus debe estar disponible para cualquier receptor de la aplicación. Si has recibido un binario compilado (<code>nexus.html</code>), el distribuidor está obligado a facilitarte el código fuente.</p><a class="buttonlink" href="#settings">Ir a Configuración ${icon('arrow-right')}</a></article></section>`}
