@@ -275,12 +275,29 @@ function filterReqState(v){
 }
 
 function filterCtl(){
-  let q=(document.getElementById('cq')?.value||'').toLowerCase();
-  document.querySelectorAll('.controlcard').forEach(x=>x.style.display=x.dataset.cq.includes(q)?'':'none');
+  const raw=(document.getElementById('cq')?.value||'').trim(),q=ctlNorm(raw),toks=q.split(/\s+/).filter(Boolean),fwSel=document.getElementById('cfw')?.value||'';
+  const hit=t=>toks.every(k=>t.includes(k));
+  let shown=0,total=0;
+  document.querySelectorAll('.controlcard').forEach(x=>{total++;const ok=(!fwSel||x.dataset.fw.split(',').includes(fwSel))&&hit(x.dataset.cq||'');x.style.display=ok?'':'none';if(ok)shown++});
+  const all=ctlCatalogMode(),sel=ctx().selected||[];
+  const cnt=document.getElementById('cqcount');
+  if(cnt)cnt.textContent=(toks.length||fwSel?`${shown} de ${total} controles`:`${all?(sel.length?'Catálogo completo':'Explorando el catálogo completo'):'Controles aplicables a la empresa'} · ${total} controles`);
+  const empty=document.getElementById('cqempty');if(empty)empty.style.display=shown?'none':'';
+  const box=document.getElementById('cqhits');if(!box)return;
+  if(!toks.length){box.style.display='none';box.innerHTML='';return}
+  const fws=C.frameworks.filter(f=>(all||sel.includes(f.id))&&hit(ctlNorm(f.id+' '+f.short+' '+f.name+' '+f.desc)));
+  const reqs=(all?C.requirements:activeReqs()).filter(r=>(!fwSel||r.framework===fwSel)&&hit(ctlNorm(r.id+' '+r.reference+' '+r.title+' '+r.area+' '+r.description+' '+fw(r.framework).short+' '+fw(r.framework).name+' '+r.control)));
+  if(!fws.length&&!reqs.length){box.style.display='none';box.innerHTML='';return}
+  const N=6;
+  box.innerHTML=(fws.length?`<div class="ctlhitgroup"><small>NORMAS</small><div class="ctlhitfws">${fws.map(f=>`<button type="button" class="secondary" onclick="filterCtlFw('${f.id}')"><b>${esc(f.short)}</b><span>${esc(f.name)} · ${C.controls.filter(c=>c.fw.includes(f.id)).length} controles</span></button>`).join('')}</div></div>`:'')+
+    (reqs.length?`<div class="ctlhitgroup"><small>REQUISITOS · ${reqs.length}</small><ul>${reqs.slice(0,N).map(r=>`<li><span class="ctlhitfw">${esc(fw(r.framework).short)}</span><div><b>${esc(r.reference)} · ${esc(r.title)}</b><span>${esc(r.id)} · control ${esc(r.control)}</span></div><button type="button" class="tertiary" onclick="openDetail('requirement','${r.id}')">Ver requisito ${icon('arrow-right')}</button></li>`).join('')}</ul>${reqs.length>N?(all?`<a class="ctlhitmore" href="#library">Ver los ${reqs.length} requisitos en la Biblioteca multinorma ${icon('arrow-right')}</a>`:`<a class="ctlhitmore" href="#requirements">Ver los ${reqs.length} requisitos en Requisitos ${icon('arrow-right')}</a>`):''}</div>`:'');
+  box.style.display='';
 }
 
 function filterCtlFw(v){
-  document.querySelectorAll('.controlcard').forEach(x=>x.style.display=!v||x.dataset.fw.split(',').includes(v)?'':'none');
+  const s=document.getElementById('cfw');
+  if(s){if(![...s.options].some(o=>o.value===v))v='';s.value=v}
+  filterCtl();
 }
 
 function make(id){

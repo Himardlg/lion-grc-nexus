@@ -1124,3 +1124,89 @@ input:focus-visible {
 @media (max-width: 800px) {
   .shell main .inlineform { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* v1.21 · Controles: aviso sin normas, alcance, buscador con normas y requisitos */
+.shell main .ctlnotice { display: flex; align-items: center; gap: var(--sp-4, 16px); flex-wrap: wrap; }
+.shell main .ctlnoticeico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-faint); color: var(--accent-ink); flex: none; }
+.shell main .ctlnoticeico .ico { width: 22px; height: 22px; }
+.shell main .ctlnoticetxt { flex: 1 1 320px; min-width: 0; }
+.shell main .ctlnoticetxt h2 { margin: 0 0 4px; font-size: var(--fs-lg, 17px); color: var(--text); }
+.shell main .ctlnoticetxt p { margin: 0; color: var(--muted); line-height: 1.5; }
+.shell main a.btnprimary,
+.shell .aboutcard a.btnprimary,
+.shell .settingcard a.btnprimary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 40px; padding: 0 18px; border-radius: var(--r-pill, 980px);
+  background: var(--accent); color: var(--on-accent) !important; font-weight: 600; font-size: var(--fs-sm, 13px);
+  text-decoration: none !important; white-space: nowrap;
+  transition: transform 160ms var(--ease-out, ease-out), background-color 160ms var(--ease-out, ease-out);
+}
+.shell main a.btnprimary:hover { background: var(--accent-press); }
+.shell main a.btnprimary:active { transform: scale(0.97); }
+.shell main a.btnprimary:focus-visible { outline: none; box-shadow: var(--focus); }
+.shell main a.btnprimary .ico { width: 16px; height: 16px; }
+.shell main .ctltoolbar { align-items: center; flex-wrap: wrap; }
+.shell main .ctltoolbar input { flex: 1 1 320px; }
+.shell main .ctlscope { display: inline-grid; grid-template-columns: auto auto; flex: none; }
+.shell main .ctlscope .segbtn { min-height: 34px; padding: 6px 12px; font-size: 12px; border-radius: 8px; white-space: nowrap; }
+.shell main .ctlcount { margin: -8px 54px 12px; color: var(--muted); font-size: var(--fs-sm, 13px); font-variant-numeric: tabular-nums; }
+.shell main .ctlhits { margin: 0 54px 16px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; display: grid; gap: 14px; }
+.shell main .ctlhitgroup > small { display: block; font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--muted); margin-bottom: 8px; }
+.shell main .ctlhitfws { display: flex; flex-wrap: wrap; gap: 8px; }
+.shell main .ctlhitfws button { flex-direction: column; align-items: flex-start; gap: 0; min-height: 0; padding: 8px 14px; border-radius: 10px; text-align: left; }
+.shell main .ctlhitfws button span { font-weight: 400; font-size: 12px; color: var(--muted); }
+.shell main .ctlhits ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.shell main .ctlhits li { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+.shell main .ctlhits li:first-child { border-top: 0; }
+.shell main .ctlhits li > div { flex: 1; min-width: 0; display: grid; }
+.shell main .ctlhits li b { font-weight: 600; color: var(--text); overflow-wrap: anywhere; }
+.shell main .ctlhits li span:not(.ctlhitfw) { font-size: 12px; color: var(--muted); }
+.shell main .ctlhitfw { flex: none; background: var(--fill); color: var(--text); border-radius: 6px; font-size: 11px; font-weight: 600; padding: 3px 7px; }
+.shell main .ctlhits li button { flex: none; min-height: 32px; }
+.shell main .ctlhitmore { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-weight: 600; font-size: var(--fs-sm, 13px); color: var(--accent-ink); }
+.shell main .ctlnoresult { display: flex; align-items: center; gap: 14px; }
+.shell main .ctlnoresult > .ico { width: 24px; height: 24px; color: var(--muted); flex: none; }
+.shell main .ctlnoresult div { display: grid; gap: 2px; }
+.shell main .ctlnoresult small { color: var(--muted); }
+.shell main .tags span.off { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); }
+@media (max-width: 1024px) {
+  .shell main .ctlcount, .shell main .ctlhits { margin-left: var(--gutter); margin-right: var(--gutter); }
+}
+@media (max-width: 600px) {
+  .shell main .ctlscope { display: grid; width: 100%; grid-template-columns: 1fr 1fr; }
+  .shell main .ctlnotice a.btnprimary { width: 100%; }
+  .shell main .ctlhits li { flex-wrap: wrap; }
+  .shell main .ctlhits li button { margin-left: auto; }
+}
+
+/* v1.21 · Acerca de Nexus */
+.shell .settingcard.aboutnexus { grid-column: 1 / -1; }
+.shell .aboutnexus h2 { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.shell .aboutnexus .aboutver { font-size: 13px; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.shell .aboutnexus h3 { margin: 18px 0 8px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.shell .aboutnexus .aboutlead { color: var(--text); line-height: 1.6; max-width: 72ch; margin: 6px 0 0; }
+.shell .aboutnexus .aboutstats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin-top: 16px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.shell .aboutnexus .aboutstats div { background: var(--surface); padding: 12px 14px; display: grid; }
+.shell .aboutnexus .aboutstats b { font-size: 22px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--text); }
+.shell .aboutnexus .aboutstats small { color: var(--muted); font-size: 12px; }
+.shell .aboutnexus .aboutfns { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.shell .aboutnexus .aboutfns li { display: flex; gap: 10px; align-items: flex-start; }
+.shell .aboutnexus .aboutfns .ico { width: 18px; height: 18px; flex: none; margin-top: 2px; color: var(--text); }
+.shell .aboutnexus .aboutfns div { display: grid; gap: 2px; }
+.shell .aboutnexus .aboutfns b { color: var(--text); font-size: 14px; }
+.shell .aboutnexus .aboutfns span { color: var(--muted); font-size: 13px; line-height: 1.45; }
+.shell .aboutnexus .aboutpeople { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.shell .aboutnexus .aboutpeople li { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
+.shell .aboutnexus .aboutpeople a { display: inline-flex; align-items: center; gap: 6px; color: var(--text) !important; text-decoration: none; font-weight: 500; }
+.shell .aboutnexus .aboutpeople a .ico { width: 14px; height: 14px; color: var(--muted); }
+.shell .aboutnexus .aboutpeople span { color: var(--muted); font-size: 13px; }
+.shell .aboutnexus .aboutactions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.shell .aboutnexus .aboutactions a { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: var(--r-pill, 980px); text-decoration: none; font-weight: 600; font-size: 13px; }
+.shell .aboutnexus .aboutactions .ico { width: 16px; height: 16px; }
+.shell .aboutnexus .aboutactions a.btnprimary:hover { background: var(--accent-press); }
+.shell .aboutnexus .aboutfine { margin-top: 14px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+.shell .aboutnexus .aboutfine a { color: var(--accent-ink); overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .shell .aboutnexus .aboutstats { grid-template-columns: 1fr 1fr; }
+  .shell .aboutnexus .aboutactions a { width: 100%; justify-content: center; }
+}
