@@ -32,9 +32,13 @@ Object.assign(window, {
   updateActionField,
   saveCompany,
   newCompany,
-  selectCompany,
+    selectCompany,
   editCompany,
+
+  // Eliminación de organizaciones
   deleteCompany,
+  deleteSelectedCompanies,
+
   toggle,
   setA,
   setSoa,
