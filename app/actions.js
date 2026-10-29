@@ -79,16 +79,58 @@ function editCompany(id){
   location.hash='company';
 }
 
-function deleteCompany(id){
-  let c=db.companies[id];
-  if(!c)return;
-  if(db.settings.confirmReset!==false&&!confirm(`¿Eliminar la empresa “${esc(c.name)}” y todos sus datos?`))return;
-  delete db.companies[id];
-  if(db.activeCompanyId===id)db.activeCompanyId=Object.keys(db.companies)[0]||'';
-  save();
-  if(location.hash!=='#companies')location.hash='companies';
-  else render();
+
+function deleteSelectedCompanies() {
+  const checkboxes = [
+    ...document.querySelectorAll('.company-select:checked')
+  ];
+
+  const ids = [...new Set(
+    checkboxes
+      .map(cb => cb.value)
+      .filter(id => db.companies && db.companies[id])
+  )];
+
+  if (!ids.length) {
+    alert('Selecciona al menos una empresa.');
+    return;
+  }
+
+  const names = ids.map(id => db.companies[id].name || 'Sin nombre');
+  const details = names.slice(0, 10).join('\n');
+  const more = names.length > 10
+    ? `\n… y ${names.length - 10} más`
+    : '';
+
+  const message =
+    `Vas a eliminar ${ids.length} empresa(s) y todos sus datos asociados.\n\n` +
+    `${details}${more}\n\n` +
+    'Esta acción no se puede deshacer. ¿Quieres continuar?';
+
+  if (!confirm(message)) return;
+
+  // Borrar únicamente las empresas seleccionadas.
+  ids.forEach(id => {
+    delete db.companies[id];
+  });
+
+  // Seleccionar otra empresa si se ha borrado la activa.
+  if (!db.companies[db.activeCompanyId]) {
+    db.activeCompanyId = Object.keys(db.companies)[0] || '';
+  }
+
+  if (typeof save === 'function') {
+    save();
+  }
+
+  // Volver a mostrar la lista actualizada.
+  if (location.hash === '#companies') {
+    render();
+  } else {
+    location.hash = 'companies';
+  }
 }
+
 
 function toggle(id,on){
   let c=ctx();
