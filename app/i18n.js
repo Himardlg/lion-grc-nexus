@@ -1,73 +1,237 @@
-// Nexus GRC Lion — Traducción de toda la interfaz al inglés (ES/EN).
-(function(){
+// Nexus GRC Lion — traducciones ES/EN
+(function () {
   'use strict';
-  var D=window.NEXUS_EN||{},CI=null;
-  var TOK=/(MAP-REQ-[A-Za-z0-9.]+-[A-Z]{2,4}-\d+|(?:REQ|CTL)-[A-Za-z0-9]+-[A-Za-z0-9.]+|(?<![A-Za-z0-9.])[A-Z]{2,4}-\d{2}(?![A-Za-z0-9])|(?<![A-Za-z0-9.])\d+(?:[.,]\d+)?(?![A-Za-z0-9])|(?<=“)[^”]+(?=”))/g;
-  function isEn(){try{return db&&db.settings&&db.settings.language==='en'}catch(e){return false}}
-  function ci(){if(!CI){CI={};for(var k in D)CI[k.toLowerCase()]=D[k]}return CI}
-  function fill(t,args){var i=0;return t.replace(/\{\}/g,function(){return i<args.length?args[i++]:''})}
-  var RULES=[
-    [/^Cubrir (.+) con una capacidad verificable\.$/,function(m){return 'Cover '+m[1]+' with a verifiable capability.'}],
-    [/^Necesidad de gestión relacionada con (.+)\.$/,function(m){return 'Management need related to '+low(m[1])+'.'}],
-    [/^Establecer una capacidad verificable de (.+) y mantenerla de forma consistente\.$/,function(m){return 'Establish a verifiable capability to '+low(m[1])+' and maintain it consistently.'}]
-  ];
-  function low(x){var v=ci()[x.toLowerCase()];return v?v.charAt(0).toLowerCase()+v.slice(1):x}
-  function core(s){
-    if(!s)return s;
-    if(Object.prototype.hasOwnProperty.call(D,s))return D[s];
-    var args=[],t=s.replace(TOK,function(m){args.push(m);return '{}'});
-    if(t!==s&&Object.prototype.hasOwnProperty.call(D,t))return fill(D[t],args);
-    for(var i=0;i<RULES.length;i++){var m=RULES[i][0].exec(s);if(m)return RULES[i][1](m)}
-    var c=s.indexOf(': ');
-    if(c>0&&c<60){var a=s.slice(0,c),b=s.slice(c+2),ta=core(a),tb=core(b);if(ta!==a||tb!==b)return ta+': '+tb}
-    if(s.indexOf(' · ')>0){var parts=s.split(' · '),out=parts.map(core);if(out.some(function(x,j){return x!==parts[j]}))return out.join(' · ')}
-    return s;
-  }
-  function tr(s){
-    if(typeof s!=='string'||!s)return s;
-    var m=/^(\s*)([\s\S]*?)(\s*)$/.exec(s);if(!m||!m[2])return s;
-    var r=core(m[2].replace(/\s+/g,' '));
-    return r===m[2].replace(/\s+/g,' ')?s:m[1]+r+m[3];
-  }
-  var ATTRS=['placeholder','title','aria-label','alt'];
-  function node(n){
-    if(n.nodeType===3){
-      var p=n.parentNode;if(p&&(p.nodeName==='SCRIPT'||p.nodeName==='STYLE'))return;
-      var v=tr(n.nodeValue);if(v!==n.nodeValue)n.nodeValue=v;
-    }else if(n.nodeType===1){
-      if(n.nodeName==='SCRIPT'||n.nodeName==='STYLE')return;
-      for(var i=0;i<ATTRS.length;i++){var a=n.getAttribute(ATTRS[i]);if(a){var t=tr(a);if(t!==a)n.setAttribute(ATTRS[i],t)}}
-      if(n.nodeName==='INPUT'&&(n.type==='button'||n.type==='submit')&&n.value){var tv=tr(n.value);if(tv!==n.value)n.value=tv}
-      for(var c=n.firstChild;c;c=c.nextSibling)node(c);
+
+  const translations = {
+    'Mis empresas': 'My organizations',
+    'Nueva empresa': 'New organization',
+    'Nueva organización': 'New organization',
+    'Crear primera organización': 'Create your first organization',
+    'Editar datos': 'Edit details',
+    'Editar organización': 'Edit organization',
+    'Eliminar': 'Delete',
+    'Cancelar': 'Cancel',
+    'Guardar': 'Save',
+    'Guardar cambios': 'Save changes',
+    'Abrir organización': 'Open organization',
+    'ORGANIZACIÓN ACTIVA': 'ACTIVE ORGANIZATION',
+    'ORGANIZACIÓN': 'ORGANIZATION',
+    'ESPACIO DE TRABAJO': 'WORKSPACE',
+    'BIENVENIDO': 'WELCOME',
+    'Inicio': 'Home',
+    'Nombre': 'Name',
+    'Organización': 'Organization',
+    'Empresa': 'Organization',
+    'Sector': 'Industry',
+    'Tamaño': 'Size',
+    'Empleados': 'Employees',
+    'Criticidad': 'Criticality',
+    'Categoría ENS': 'ENS category',
+    'Sin determinar': 'Not specified',
+    'Sector no definido': 'Industry not specified',
+    'Sin tamaño': 'Size not specified',
+    'Pequeña': 'Small',
+    'Mediana': 'Medium',
+    'Grande': 'Large',
+    'Baja': 'Low',
+    'Media': 'Medium',
+    'Alta': 'High',
+    'Activa': 'Active',
+    'Evaluaciones': 'Assessments',
+    'Acciones': 'Actions',
+    'normas seleccionadas': 'selected frameworks',
+    'organizaciones guardadas': 'organizations saved',
+    'Aún no hay ninguna empresa': 'There are no organizations yet',
+    'Aún no tienes organizaciones': 'You do not have any organizations yet',
+    'Empieza por crear tu organización': 'Start by creating your organization',
+    'Crear una organización': 'Create an organization',
+    'Importar organización': 'Import organization',
+    'Cargar empresa de ejemplo': 'Load demo organization',
+    'Gestiona tus organizaciones, abre un proyecto o modifica sus datos.':
+      'Manage your organizations, open a project, or edit their details.',
+    'Cada organización mantiene sus propias evaluaciones, normas, evidencias y acciones.':
+      'Each organization has its own assessments, frameworks, evidence, and actions.',
+    'Crea una organización para empezar a trabajar con tus evaluaciones GRC.':
+      'Create an organization to start working with your GRC assessments.',
+    'Contexto de la empresa': 'Organization details',
+    'Guardar contexto y calcular alcance': 'Save details and calculate scope',
+    'Todo se guarda en este navegador. Puedes eliminar y volver a crear empresas cuando quieras.':
+      'Everything is saved in this browser. You can delete and recreate organizations at any time.',
+    'Eliminar organización': 'Delete organization',
+    '¿Estás seguro?': 'Are you sure?',
+    'Buscar': 'Search',
+    'Idioma': 'Language',
+    'Español': 'Spanish',
+    'Inglés': 'English',
+    'Tema': 'Theme',
+    'Claro': 'Light',
+    'Oscuro': 'Dark',
+    'Mi perfil': 'My profile',
+    'Configuración Nexus': 'Nexus settings',
+    'Panel multinorma': 'Multi-framework dashboard',
+    'Informe imprimible': 'Printable report',
+    'Normativa aplicable': 'Applicable frameworks',
+    'Biblioteca multinorma': 'Multi-framework library',
+    'Equivalencias': 'Equivalences',
+    'Comparar normas': 'Compare frameworks',
+    'Requisitos': 'Requirements',
+    'Controles': 'Controls',
+    'Situación actual': 'Current status',
+    'Madurez': 'Maturity',
+    'Plan de acción': 'Action plan',
+    'Evidencias': 'Evidence',
+    'Riesgos': 'Risks',
+    'Auditoría': 'Audit',
+    'Acerca de': 'About',
+    'Configuración': 'Settings',
+    'Cerrar menú': 'Close menu',
+    'Todos los cambios guardados': 'All changes saved'
+  };
+
+  const phrases = Object.keys(translations)
+    .sort((a, b) => b.length - a.length);
+
+  function isEnglish() {
+    try {
+      return window.db?.settings?.language === 'en';
+    } catch (_) {
+      return false;
     }
   }
-  var obs=null,busy=false;
-  function run(roots){
-    if(!isEn()||busy)return;busy=true;
-    try{roots.forEach(function(r){if(r.isConnected!==false)node(r)});
-      if(document.title){var t=tr(document.title);if(t!==document.title)document.title=t}
-    }finally{busy=false;if(obs)obs.takeRecords()}
+
+  function translate(value) {
+    if (typeof value !== 'string' || !value || !isEnglish()) {
+      return value;
+    }
+
+    const trimmed = value.trim();
+
+    if (translations[trimmed]) {
+      return value.replace(trimmed, translations[trimmed]);
+    }
+
+    let result = value;
+
+    for (const phrase of phrases) {
+      if (result.includes(phrase)) {
+        result = result.split(phrase).join(translations[phrase]);
+      }
+    }
+
+    return result;
   }
-  function start(){
-    if(typeof MutationObserver==='undefined'||typeof document==='undefined'||!document.body)return;
-    obs=new MutationObserver(function(recs){
-      if(!isEn())return;var roots=[];
-      recs.forEach(function(r){
-        if(r.type==='childList')r.addedNodes.forEach(function(n){roots.push(n)});
-        else if(r.type==='characterData')roots.push(r.target);
-        else if(r.type==='attributes')roots.push(r.target);
-      });
-      run(roots);
+
+  const attributes = [
+    'placeholder',
+    'title',
+    'aria-label',
+    'alt'
+  ];
+
+  function visit(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const parent = node.parentElement;
+
+      if (
+        parent &&
+        ['SCRIPT', 'STYLE', 'TEXTAREA'].includes(parent.tagName)
+      ) {
+        return;
+      }
+
+      const translated = translate(node.nodeValue);
+
+      if (translated !== node.nodeValue) {
+        node.nodeValue = translated;
+      }
+
+      return;
+    }
+
+    if (
+      node.nodeType !== Node.ELEMENT_NODE ||
+      ['SCRIPT', 'STYLE'].includes(node.tagName)
+    ) {
+      return;
+    }
+
+    for (const attribute of attributes) {
+      const value = node.getAttribute(attribute);
+
+      if (value) {
+        const translated = translate(value);
+
+        if (translated !== value) {
+          node.setAttribute(attribute, translated);
+        }
+      }
+    }
+
+    if (
+      node.tagName === 'INPUT' &&
+      ['button', 'submit'].includes(node.type)
+    ) {
+      const translated = translate(node.value);
+
+      if (translated !== node.value) {
+        node.value = translated;
+      }
+    }
+
+    for (const child of Array.from(node.childNodes)) {
+      visit(child);
+    }
+  }
+
+  function applyLanguage() {
+    if (!document.body) return;
+
+    if (!isEnglish()) {
+      document.documentElement.lang = 'es';
+      return;
+    }
+
+    visit(document.body);
+    document.documentElement.lang = 'en';
+  }
+
+  let scheduled = false;
+
+  function scheduleTranslation() {
+    if (scheduled) return;
+
+    scheduled = true;
+
+    queueMicrotask(() => {
+      scheduled = false;
+      applyLanguage();
     });
-    obs.observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:ATTRS});
-    run([document.body]);
   }
-  ['alert','confirm','prompt'].forEach(function(k){
-    var f=window[k];if(typeof f!=='function')return;
-    window[k]=function(m){var a=Array.prototype.slice.call(arguments);if(isEn()&&typeof a[0]==='string')a[0]=tr(a[0]);if(isEn()&&k==='prompt'&&typeof a[1]==='string')a[1]=tr(a[1]);return f.apply(window,a)};
-  });
-  window.nexusTranslate=tr;window.nexusApplyLanguage=function(){run([document.body])};
-  if(typeof document!=='undefined'){
-    if(document.body)start();else if(document.addEventListener)document.addEventListener('DOMContentLoaded',start);
+
+  function start() {
+    applyLanguage();
+
+    if (typeof MutationObserver !== 'undefined') {
+      const observer = new MutationObserver(scheduleTranslation);
+
+      observer.observe(document.body, {
+        subtree: true,
+        childList: true,
+        characterData: true,
+        attributes: true,
+        attributeFilter: attributes
+      });
+    }
   }
+
+  window.nexusTranslate = translate;
+  window.nexusApplyLanguage = applyLanguage;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else {
+    start();
+  }
+
+  window.addEventListener('languagechange', applyLanguage);
 })();
