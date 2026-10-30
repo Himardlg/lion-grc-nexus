@@ -1,5 +1,4 @@
-
- // GRC Nexus — Herramienta de gestión de cumplimiento multinorma
+// GRC Nexus — Herramienta de gestión de cumplimiento multinorma
 // Copyright (C) 2026  hiramyclases@gmail.com
 //
 // This program is free software: you can redistribute it and/or modify
@@ -91,7 +90,7 @@ function render() {
   }
 
   if (same) {
-    ['q', 'rq', 'cq'].forEach(i => {
+    ['q', 'rq', 'cq', 'mq', 'mfw'].forEach(i => {
       const e = document.getElementById(i);
       if (e) v[i] = e.value;
     });
@@ -124,6 +123,9 @@ document.addEventListener && document.addEventListener('keydown', e => {
     e.preventDefault();
     e.target.click();
   }
+});
+
+render();
 });
 
 render();
