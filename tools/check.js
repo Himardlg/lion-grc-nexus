@@ -7,6 +7,7 @@ const src=[...fs.readFileSync(path.join(root,'index.html'),'utf8').matchAll(/<sc
 (0,eval)(src+';global.__t={C,db,page,ctx,ctl,esc,normalizeCompany,panelView};global.deleteCompany=deleteCompany;global.view=view;');
 const {C,page,ctx,normalizeCompany,db}=global.__t;global.render=global.render||(()=>{});let bad=0;const fail=m=>{bad++;console.log('✗',m)},ok=m=>console.log('✓',m);
 const ids=a=>new Set(a.map(x=>x.id));
+{const pv=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8')).version,av=(fs.readFileSync(path.join(root,'app/version.js'),'utf8').match(/APP_VERSION\s*=\s*'([^']+)'/)||[])[1];if(pv!==av)fail(`Versión: package.json ${pv} ≠ app/version.js ${av}`);else ok(`Versión ${av} coherente (package.json y app/version.js)`)}
 if(ids(C.requirements).size!==C.requirements.length)fail('IDs de requisito duplicados');
 if(ids(C.controls).size!==C.controls.length)fail('IDs de control duplicados');
 C.requirements.forEach(r=>{

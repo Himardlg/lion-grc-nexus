@@ -22,7 +22,13 @@
   <img alt="Local-first" src="https://img.shields.io/badge/datos-local--first-2E8B57?style=flat"/>
   <img alt="Sin dependencias" src="https://img.shields.io/badge/dependencias-0-2E8B57?style=flat"/>
   <img alt="Iconos Lucide" src="https://img.shields.io/badge/iconos-Lucide-1d1d1f?style=flat"/>
-  <img alt="Versión" src="https://img.shields.io/badge/versión-1.19.2-1d1d1f?style=flat"/>
+  <img alt="Versión" src="https://img.shields.io/badge/versión-1.21.0-1d1d1f?style=flat"/>
+  <br/>
+  <a href="https://github.com/Himardlg/lion-grc-nexus"><img alt="Código fuente en GitHub" src="https://img.shields.io/badge/código%20fuente-Himardlg%2Flion--grc--nexus-1d1d1f?style=flat&logo=github"/></a>
+</p>
+
+<p align="center">
+  <b>Código fuente:</b> <a href="https://github.com/Himardlg/lion-grc-nexus">github.com/Himardlg/lion-grc-nexus</a>
 </p>
 
 <p align="center">

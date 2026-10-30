@@ -48,6 +48,7 @@ Object.assign(window, {
   filterReqState,
   filterCtl,
   filterCtlFw,
+  setCtlScope,
   make,
   auto,
   updateAction,

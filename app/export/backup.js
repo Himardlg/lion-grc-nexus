@@ -19,7 +19,7 @@
 // Original: https://github.com/heindall92/rosetta_multinorma
 //
 // Módulo: Copias de seguridad e importación/exportación de empresas.
-function buildBackupPayload(){return {type:'grc-nexus-backup',app:'Nexus GRC Lion',appVersion:'1.21.0',schemaVersion:19,exportedAt:new Date().toISOString(),activeCompanyId:db.activeCompanyId,profile:db.profile,settings:db.settings,companies:db.companies};}
+function buildBackupPayload(){return {type:'grc-nexus-backup',app:'Nexus GRC Lion',appVersion:APP_VERSION,schemaVersion:19,exportedAt:new Date().toISOString(),activeCompanyId:db.activeCompanyId,profile:db.profile,settings:db.settings,companies:db.companies};}
 function exportBackup(){
  const payload=buildBackupPayload();
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
