@@ -8,11 +8,11 @@
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Catalog data (app/catalog.js) derived from Rosetta Multinorma
 // by heindall92, licensed under GNU GPL v2.
@@ -21,58 +21,43 @@
 // Módulo: Acciones de usuario: empresas, evaluación, SoA, filtros,
 // formularios, auditorías, evidencias y snapshots de cobertura.
 
-function saveCompany(e) {
+function saveCompany(e){
   e.preventDefault();
-
-  const f = new FormData(e.target);
-  const c = ctx() || blankCompany();
-
-  Object.assign(c, {
-    name: f.get('name'),
-    sector: f.get('sector'),
-    size: f.get('size'),
-    employees: f.get('employees'),
-    criticality: f.get('criticality'),
-    financial: f.get('financial') === 'on',
-    public: f.get('public') === 'on',
-    ai: f.get('ai') === 'on',
-    ensCategory: f.get('ensCategory') || '',
-    ensLevels: Object.fromEntries(
-      ENS_DIMS
-        .map(k => [k, f.get('ensLevel_' + k)])
-        .filter(e => e[1])
-    ),
-    nis2Class: f.get('nis2Class') || '',
-    doraSimplified: f.get('doraSimplified') === 'on',
-    sensitive: f.get('sensitive') === 'on',
-    target: Number(f.get('target')),
-    updatedAt: now()
+  let f=new FormData(e.target),c=ctx()||blankCompany();
+  Object.assign(c,{
+    name:f.get('name'),
+    sector:f.get('sector'),
+    size:f.get('size'),
+    employees:f.get('employees'),
+    criticality:f.get('criticality'),
+    financial:f.get('financial')==='on',
+    public:f.get('public')==='on',
+    ai:f.get('ai')==='on',
+    ensCategory:f.get('ensCategory')||'',
+    ensLevels:Object.fromEntries(ENS_DIMS.map(k=>[k,f.get('ensLevel_'+k)]).filter(e=>e[1])),
+    nis2Class:f.get('nis2Class')||'',
+    doraSimplified:f.get('doraSimplified')==='on',
+    sensitive:f.get('sensitive')==='on',
+    target:+f.get('target'),
+    updatedAt:now()
   });
-
-  const r = recommended();
-
-  if (db.settings.autoRecommendations) {
-    c.selected = [
-      ...new Set([...(c.selected || []), ...r.ids])
-    ];
-  }
-
-  db.companies[c.id] = c;
-
+  let r=recommended();
+  if(db.settings.autoRecommendations)c.selected=[...new Set([...c.selected,...r.ids])];
+  db.companies[c.id]=c;
   save();
-  location.hash = 'scope';
+  location.hash='scope';
 }
 
-function newCompany() {
-  const isEnglish = db.settings?.language === 'en';
 
-  const c = blankCompany(
-    isEnglish ? 'New organization' : 'Nueva organización'
+function newCompany(){
+  let c = blankCompany(
+    db.settings.language === 'en'
+      ? 'New organization'
+      : 'Nueva organización'
   );
 
   c.target = Number(db.settings.defaultTarget) || 3;
   c.wizard = 0;
-
   db.companies[c.id] = c;
   db.activeCompanyId = c.id;
 
@@ -80,513 +65,259 @@ function newCompany() {
   goTo('company');
 }
 
-function selectCompany(id) {
-  if (!db.companies || !db.companies[id]) return;
-
-  db.activeCompanyId = id;
+function selectCompany(id){
+  if(!db.companies[id])return;
+  db.activeCompanyId=id;
   save();
-
-  if (location.hash === '#panel') {
-    render();
-  } else {
-    location.hash = 'panel';
-  }
+  location.hash==='#panel'?render():location.hash='panel';
 }
 
-function editCompany(id) {
-  if (!db.companies || !db.companies[id]) return;
-
-  db.activeCompanyId = id;
+function editCompany(id){
+  if(!db.companies[id])return;
+  db.activeCompanyId=id;
   save();
-  location.hash = 'company';
+  location.hash='company';
 }
 
-/**
- * Elimina una organización individual.
- * Solicita confirmación antes de eliminarla y sus datos asociados.
- */
-function deleteCompany(id) {
-  const isEnglish = db.settings?.language === 'en';
-  const companies = db.companies || {};
-  const company = companies[id];
 
-  if (!company) {
-    alert(
-      isEnglish
-        ? 'The organization could not be found.'
-        : 'No se ha encontrado la organización.'
-    );
-    return;
-  }
-
-  const name = company.name || (
-    isEnglish ? 'Unnamed organization' : 'Organización sin nombre'
-  );
-
-  const message = isEnglish
-    ? `Are you sure you want to delete "${name}"?\n\nAll data associated with this organization will be deleted. This action cannot be undone.`
-    : `¿Seguro que quieres eliminar "${name}"?\n\nSe eliminarán todos los datos asociados a esta organización. Esta acción no se puede deshacer.`;
-
-  if (!window.confirm(message)) return;
-
-  delete companies[id];
-
-  // Si se elimina la organización activa, seleccionar otra disponible.
-  if (db.activeCompanyId === id) {
-    db.activeCompanyId = Object.keys(companies)[0] || '';
-  }
-
+function removeCompanies(ids,message){
+  ids=[...new Set(ids)].filter(id=>db.companies&&db.companies[id]);
+  if(!ids.length)return false;
+  if(!confirm(message(ids.map(id=>db.companies[id].name||'Sin nombre'))))return false;
+  ids.forEach(id=>{delete db.companies[id]});
+  if(!db.companies[db.activeCompanyId])db.activeCompanyId=Object.keys(db.companies)[0]||'';
   save();
-
-  // Volver a la lista de organizaciones y actualizar la vista.
-  location.hash = 'companies';
   render();
+  return true;
 }
 
-/**
- * Elimina las organizaciones seleccionadas mediante las casillas
- * .company-select.
- */
-function deleteSelectedCompanies() {
-  const isEnglish = db.settings?.language === 'en';
-  const companies = db.companies || {};
+function deleteCompany(id){
+  if(!db.companies[id])return;
+  const en=db.settings.language==='en';
+  return removeCompanies([id],n=>en
+    ?`You are about to delete the company “${n[0]}” and all its associated data.\n\nThis action cannot be undone. Do you want to continue?`
+    :`Vas a eliminar la empresa «${n[0]}» y todos sus datos asociados.\n\nEsta acción no se puede deshacer. ¿Quieres continuar?`);
+}
 
-  const checkboxes = [
-    ...document.querySelectorAll('.company-select:checked')
-  ];
+function selectedCompanyIds(){
+  return [...document.querySelectorAll('.company-select:checked')].map(cb=>cb.value);
+}
 
-  const ids = [
-    ...new Set(
-      checkboxes
-        .map(cb => cb.value)
-        .filter(id => companies[id])
-    )
-  ];
+function updateCompanySelection(){
+  const n=selectedCompanyIds().length,total=document.querySelectorAll('.company-select').length;
+  const cnt=document.getElementById('company-count'),btn=document.getElementById('company-del'),all=document.getElementById('company-all');
+  const en=db.settings.language==='en';
+  if(cnt)cnt.textContent=en?`${n} selected`:`${n} seleccionada${n===1?'':'s'}`;
+  if(btn)btn.disabled=!n;
+  if(all){all.checked=n>0&&n===total;all.indeterminate=n>0&&n<total}
+  document.querySelectorAll('.companycard').forEach(card=>{const cb=card.querySelector('.company-select');card.classList.toggle('picked',!!(cb&&cb.checked))});
+}
 
-  if (!ids.length) {
-    alert(
-      isEnglish
-        ? 'Select at least one organization.'
-        : 'Selecciona al menos una empresa.'
-    );
-    return;
-  }
+function toggleAllCompanies(on){
+  document.querySelectorAll('.company-select').forEach(cb=>{cb.checked=!!on});
+  updateCompanySelection();
+}
 
-  const names = ids.map(id =>
-    companies[id].name || (
-      isEnglish ? 'Unnamed organization' : 'Organización sin nombre'
-    )
-  );
-
-  const details = names.slice(0, 10).join('\n');
-
-  const more = names.length > 10
-    ? (
-        isEnglish
-          ? `\n... and ${names.length - 10} more`
-          : `\n... y ${names.length - 10} más`
-      )
-    : '';
-
-  const message = isEnglish
-    ? `You are about to delete ${ids.length} organization(s) and all associated data.\n\n${details}${more}\n\nThis action cannot be undone. Do you want to continue?`
-    : `Vas a eliminar ${ids.length} empresa(s) y todos sus datos asociados.\n\n${details}${more}\n\nEsta acción no se puede deshacer. ¿Quieres continuar?`;
-
-  if (!window.confirm(message)) return;
-
-  // Eliminar únicamente las organizaciones seleccionadas.
-  ids.forEach(id => {
-    delete companies[id];
+function deleteSelectedCompanies(){
+  const ids=selectedCompanyIds();
+  const en=db.settings.language==='en';
+  if(!ids.length){alert(en?'Select at least one company.':'Selecciona al menos una empresa.');return}
+  removeCompanies(ids,names=>{
+    if(en){const more=names.length>10?`\n… and ${names.length-10} more`:'';return `You are about to delete ${names.length} company(ies) and all their associated data.\n\n${names.slice(0,10).join('\n')}${more}\n\nThis action cannot be undone. Do you want to continue?`}
+    const more=names.length>10?`\n… y ${names.length-10} más`:'';
+    return `Vas a eliminar ${names.length} empresa(s) y todos sus datos asociados.\n\n${names.slice(0,10).join('\n')}${more}\n\nEsta acción no se puede deshacer. ¿Quieres continuar?`;
   });
-
-  // Mantener una organización activa válida.
-  if (!companies[db.activeCompanyId]) {
-    db.activeCompanyId = Object.keys(companies)[0] || '';
-  }
-
-  save();
-
-  // Mostrar la lista actualizada.
-  location.hash = 'companies';
-  render();
 }
 
-function toggle(id, on) {
-  const c = ctx();
 
-  c.selected = on
-    ? [...new Set([...(c.selected || []), id])]
-    : (c.selected || []).filter(x => x !== id);
-
-  c.updatedAt = now();
-
+function toggle(id,on){
+  let c=ctx();
+  c.selected=on?[...new Set([...c.selected,id])]:c.selected.filter(x=>x!==id);
+  c.updatedAt=now();
   save();
   render();
 }
 
-function setA(id, k, v) {
-  const c = ctx();
-  const cur = c.assess[id] || {
-    level: 0,
-    owner: '',
-    evidence: ''
-  };
-
-  if (k === 'level') {
-    const n = Number(v);
-    cur.level = Number.isFinite(n)
-      ? Math.max(0, Math.min(5, n))
-      : 0;
-  } else {
-    cur[k] = v;
+function setA(id,k,v){
+  let c=ctx(),cur=c.assess[id]||{level:0,owner:'',evidence:''};
+  if(k==='level'){
+    let n=Number(v);
+    cur.level=Number.isFinite(n)?Math.max(0,Math.min(5,n)):0;
+  }else{
+    cur[k]=v;
   }
-
-  c.assess[id] = cur;
-  c.updatedAt = now();
-
+  c.assess[id]=cur;
+  c.updatedAt=now();
   save();
-
-  const card = document.querySelector(
-    `.ctl[data-id="${CSS.escape(id)}"]`
-  );
-
-  if (card) {
-    card.dataset.level = String(cur.level);
-
-    const sel = card.querySelector('select[data-field="level"]');
-
-    if (sel && k === 'level') {
-      sel.value = String(cur.level);
-    }
+  const card=document.querySelector(`.ctl[data-id="${CSS.escape(id)}"]`);
+  if(card){
+    card.dataset.level=String(cur.level);
+    let sel=card.querySelector('select[data-field="level"]');
+    if(sel&&k==='level')sel.value=String(cur.level);
   }
 }
 
-function saveControlEvaluation(id) {
-  const card = document.querySelector(
-    `.ctl[data-id="${CSS.escape(id)}"]`
-  );
-
-  if (!card) return;
-
-  const get = k => card.querySelector(`[data-field="${k}"]`);
-  const c = ctx();
-  const old = c.assess[id] || {
-    level: 0,
-    owner: '',
-    evidence: ''
+function saveControlEvaluation(id){
+  const card=document.querySelector(`.ctl[data-id="${CSS.escape(id)}"]`);
+  if(!card)return;
+  const get=k=>card.querySelector(`[data-field="${k}"]`);
+  const c=ctx(),old=c.assess[id]||{level:0,owner:'',evidence:''};
+  c.assess[id]={
+    level:Number(get('level')?.value??old.level)||0,
+    owner:get('owner')?.value??old.owner,
+    evidence:get('evidence')?.value??old.evidence
   };
-
-  c.assess[id] = {
-    level: Number(get('level')?.value ?? old.level) || 0,
-    owner: get('owner')?.value ?? old.owner,
-    evidence: get('evidence')?.value ?? old.evidence
-  };
-
-  c.updatedAt = now();
-
-  if (save()) {
-    const status = document.getElementById('saveStatus');
-
-    if (status) {
-      status.innerHTML = icon('check') + ' Evaluación guardada';
-    }
+  c.updatedAt=now();
+  if(save()){
+    const status=document.getElementById('saveStatus');
+    if(status)status.innerHTML=icon('check')+' Evaluación guardada';
   }
 }
 
-function setGap(id, on) {
-  const c = ctx();
-
-  c.gapclosed = c.gapclosed || {};
-
-  if (on) {
-    c.gapclosed[id] = true;
-  } else {
-    delete c.gapclosed[id];
-  }
-
-  c.updatedAt = now();
-
+function setGap(id,on){
+  let c=ctx();
+  c.gapclosed=c.gapclosed||{};
+  if(on)c.gapclosed[id]=true;
+  else delete c.gapclosed[id];
+  c.updatedAt=now();
   save();
   render();
 }
 
-function setSoa(id, v) {
-  const c = ctx();
-
-  c.soa = c.soa || {};
-
-  const note =
-    document.getElementById('req-just-' + id)?.value ||
-    c.soa[id]?.note ||
-    '';
-
-  if (v === 'auto') {
-    if (note) {
-      c.soa[id] = { app: null, note };
-    } else {
-      delete c.soa[id];
-    }
-  } else {
-    c.soa[id] = {
-      app: v === 'yes',
-      note
-    };
+function setSoa(id,v){
+  let c=ctx();
+  c.soa=c.soa||{};
+  const note=document.getElementById('req-just-'+id)?.value||c.soa[id]?.note||'';
+  if(v==='auto'){
+    if(note)c.soa[id]={app:null,note};
+    else delete c.soa[id];
+  }else{
+    c.soa[id]={app:v==='yes',note};
   }
-
-  c.updatedAt = now();
-
+  c.updatedAt=now();
   save();
   refreshDetailStatus(id);
 }
 
-function setSoaNote(id, value) {
-  const c = ctx();
-
-  c.soa = c.soa || {};
-
-  const selected =
-    document.getElementById('req-app-' + id)?.value || 'auto';
-
-  const app = selected === 'auto'
-    ? null
-    : selected === 'yes';
-
-  const note = String(value ?? '').slice(0, 2000);
-
-  if (selected === 'auto' && !note) {
-    delete c.soa[id];
-  } else {
-    c.soa[id] = { app, note };
-  }
-
-  c.updatedAt = now();
-
+function setSoaNote(id,value){
+  let c=ctx();
+  c.soa=c.soa||{};
+  const selected=document.getElementById('req-app-'+id)?.value||'auto';
+  const app=selected==='auto'?null:selected==='yes';
+  const note=String(value??'').slice(0,2000);
+  if(selected==='auto'&&!note)delete c.soa[id];
+  else c.soa[id]={app,note};
+  c.updatedAt=now();
   save();
 }
 
-function setRequirementField(id, field, value) {
-  if (!['owner', 'notes', 'evidence'].includes(field)) return;
-
-  const c = ctx();
-
-  c.reqDetails = c.reqDetails || {};
-
-  c.reqDetails[id] = c.reqDetails[id] || {
-    owner: '',
-    notes: '',
-    evidence: ''
-  };
-
-  c.reqDetails[id][field] = String(value ?? '').slice(0, 4000);
-  c.updatedAt = now();
-
+function setRequirementField(id,field,value){
+  if(!['owner','notes','evidence'].includes(field))return;
+  let c=ctx();
+  c.reqDetails=c.reqDetails||{};
+  c.reqDetails[id]=c.reqDetails[id]||{owner:'',notes:'',evidence:''};
+  c.reqDetails[id][field]=String(value??'').slice(0,4000);
+  c.updatedAt=now();
   save();
 }
 
-function saveRequirementDetails(id) {
-  const c = ctx();
-
-  c.soa = c.soa || {};
-
-  const app =
-    document.getElementById('req-app-' + id)?.value || 'auto';
-
-  const note =
-    document.getElementById('req-just-' + id)?.value || '';
-
-  if (app === 'auto') {
-    if (note) {
-      c.soa[id] = { app: null, note };
-    } else {
-      delete c.soa[id];
-    }
-  } else {
-    c.soa[id] = {
-      app: app === 'yes',
-      note
-    };
+function saveRequirementDetails(id){
+  const c=ctx();
+  const app=document.getElementById('req-app-'+id)?.value||'auto';
+  const note=document.getElementById('req-just-'+id)?.value||'';
+  if(app==='auto'){
+    if(note)c.soa[id]={app:null,note};
+    else delete c.soa[id];
+  }else{
+    c.soa[id]={app:app==='yes',note};
   }
-
-  c.reqDetails = c.reqDetails || {};
-
-  c.reqDetails[id] = {
-    owner: document.getElementById('req-owner-' + id)?.value || '',
-    notes: document.getElementById('req-notes-' + id)?.value || '',
-    evidence: document.getElementById('req-evidence-' + id)?.value || ''
+  c.reqDetails=c.reqDetails||{};
+  c.reqDetails[id]={
+    owner:document.getElementById('req-owner-'+id)?.value||'',
+    notes:document.getElementById('req-notes-'+id)?.value||'',
+    evidence:document.getElementById('req-evidence-'+id)?.value||''
   };
-
-  c.updatedAt = now();
-
-  if (save()) {
-    const el = document.getElementById('saveStatus');
-
-    if (el) {
-      el.className = 'save-status saved';
-      el.innerHTML = icon('check') + ' Cambios guardados';
+  c.updatedAt=now();
+  if(save()){
+    const el=document.getElementById('saveStatus');
+    if(el){
+      el.className='save-status saved';
+      el.innerHTML=icon('check')+' Cambios guardados';
     }
-
     render();
   }
 }
 
-function refreshDetailStatus(id) {
-  const status = document.querySelector('.detailstatus');
-  const r = req(id);
-
-  if (status && r) {
-    const s = reqState(r);
-
-    status.className = 'detailstatus ' + s;
-
-    const b = status.querySelector('b');
-
-    if (b) {
-      b.textContent = statusLabel(s);
-    }
+function refreshDetailStatus(id){
+  const status=document.querySelector('.detailstatus');
+  const r=req(id);
+  if(status&&r){
+    const s=reqState(r);
+    status.className='detailstatus '+s;
+    const b=status.querySelector('b');
+    if(b)b.textContent=statusLabel(s);
   }
 }
 
-function setMappingReview(id, field, value) {
-  const c = ctx();
-
-  c.mappingReviews = c.mappingReviews || {};
-
-  const r = c.mappingReviews[id] || {
-    status: 'Pendiente',
-    note: '',
-    reviewer: '',
-    reviewDate: ''
-  };
-
-  if (!['status', 'note', 'reviewer', 'reviewDate'].includes(field)) {
-    return;
+function setMappingReview(id,field,value){
+  let c=ctx();
+  c.mappingReviews=c.mappingReviews||{};
+  let r=c.mappingReviews[id]||{status:'Pendiente',note:'',reviewer:'',reviewDate:''};
+  if(!['status','note','reviewer','reviewDate'].includes(field))return;
+  r[field]=String(value??'').slice(0,2000);
+  if(field==='status'&&value==='Validada'&&!r.reviewDate){
+    r.reviewDate=new Date().toISOString().slice(0,10);
   }
-
-  r[field] = String(value ?? '').slice(0, 2000);
-
-  if (field === 'status' && value === 'Validada' && !r.reviewDate) {
-    r.reviewDate = new Date().toISOString().slice(0, 10);
-  }
-
-  c.mappingReviews[id] = r;
-
+  c.mappingReviews[id]=r;
   save();
   render();
 }
 
-function filterMappings() {
-  const q = (
-    document.getElementById('mappingSearch')?.value || ''
-  ).toLowerCase();
-
-  const st =
-    document.getElementById('mappingStatusFilter')?.value || '';
-
-  document.querySelectorAll('.mappingreview').forEach(x => {
-    x.style.display =
-      (!q || x.dataset.search.includes(q)) &&
-      (!st || x.dataset.status === st)
-        ? ''
-        : 'none';
+function filterMappings(){
+  let q=(document.getElementById('mappingSearch')?.value||'').toLowerCase();
+  let st=document.getElementById('mappingStatusFilter')?.value||'';
+  document.querySelectorAll('.mappingreview').forEach(x=>{
+    x.style.display=(!q||x.dataset.search.includes(q))&&(!st||x.dataset.status===st)?'':'none';
   });
 }
 
-function exportMappingReviews() {
-  const c = ctx();
-
-  const rows = [[
-    'Empresa',
-    'ID correspondencia',
-    'Norma',
-    'Referencia',
-    'Requisito',
-    'Control',
-    'Estado',
-    'Revisor',
-    'Fecha revisión',
-    'Justificación'
-  ]];
-
-  C.mappings.filter(m => {
-    const r = req(m.requirement);
-    return r && c.selected.includes(r.framework);
-  }).forEach(m => {
-    const r = req(m.requirement);
-    const cc = ctl(m.control);
-    const v = c.mappingReviews?.[m.id] || {};
-
+function exportMappingReviews(){
+  let c=ctx(),rows=[['Empresa','ID correspondencia','Norma','Referencia','Requisito','Control','Estado','Revisor','Fecha revisión','Justificación']];
+  C.mappings.filter(m=>{
+    let r=req(m.requirement);
+    return r&&c.selected.includes(r.framework);
+  }).forEach(m=>{
+    let r=req(m.requirement),cc=ctl(m.control),v=c.mappingReviews?.[m.id]||{};
     rows.push([
-      c.name,
-      m.id,
-      fw(r.framework).name,
-      r.reference,
-      r.title,
-      cc.name,
-      v.status || 'Pendiente',
-      v.reviewer || '',
-      v.reviewDate || '',
-      v.note || m.rationale || ''
+      c.name,m.id,fw(r.framework).name,r.reference,r.title,cc.name,
+      v.status||'Pendiente',v.reviewer||'',v.reviewDate||'',v.note||m.rationale||''
     ]);
   });
-
-  const csv = rows
-    .map(row =>
-      row
-        .map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"')
-        .join(';')
-    )
-    .join('\r\n');
-
-  const blob = new Blob(
-    ['\ufeff' + csv],
-    { type: 'text/csv;charset=utf-8;' }
-  );
-
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-
-  a.href = url;
-  a.download =
-    'matriz-correspondencias-' +
-    (c.name || 'empresa').replace(/[^a-z0-9_-]+/gi, '-') +
-    '.csv';
-
+  const csv=rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;
+  a.download='matriz-correspondencias-'+(c.name||'empresa').replace(/[^a-z0-9_-]+/gi,'-')+'.csv';
   a.click();
   URL.revokeObjectURL(url);
 }
 
-function filter() {
-  const q = (
-    document.getElementById('q')?.value || ''
-  ).toLowerCase();
-
-  document.querySelectorAll('.ctl').forEach(x => {
-    x.style.display = x.dataset.q.includes(q) ? '' : 'none';
-  });
+function filter(){
+  let q=(document.getElementById('q')?.value||'').toLowerCase();
+  document.querySelectorAll('.ctl').forEach(x=>x.style.display=x.dataset.q.includes(q)?'':'none');
 }
 
-function filterLevel(v) {
-  document.querySelectorAll('.ctl').forEach(x => {
-    x.style.display =
-      !v || x.dataset.level === v ? '' : 'none';
-  });
+function filterLevel(v){
+  document.querySelectorAll('.ctl').forEach(x=>x.style.display=!v||x.dataset.level===v?'':'none');
 }
 
-function filterReq() {
-  const q = (
-    document.getElementById('rq')?.value || ''
-  ).toLowerCase();
-
-  document.querySelectorAll('.reqcard').forEach(x => {
-    x.style.display = x.dataset.rq.includes(q) ? '' : 'none';
-  });
+function filterReq(){
+  let q=(document.getElementById('rq')?.value||'').toLowerCase();
+  document.querySelectorAll('.reqcard').forEach(x=>x.style.display=x.dataset.rq.includes(q)?'':'none');
 }
 
-function filterReqState(v) {
-  document.querySelectorAll('.reqcard').forEach(x => {
-    x.style.display =
-      !v || x.dataset.state === v ? '' : 'none';
-  });
+function filterReqState(v){
+  document.querySelectorAll('.reqcard').forEach(x=>x.style.display=!v||x.dataset.state===v?'':'none');
 }
 
 function filterCtl(){
@@ -615,124 +346,163 @@ function filterCtlFw(v){
   filterCtl();
 }
 
-function make(id) {
-  const c = ctx();
-  const x = ctl(id);
-
-  if (!c.actions.some(a => a.control === id)) {
+function make(id){
+  let c=ctx(),x=ctl(id);
+  if(!c.actions.some(a=>a.control===id)){
     c.actions.push({
-      title: 'Implantar / mejorar ' + x.name,
-      control: id,
-      fw: x.fw
-        .filter(z => c.selected.includes(z))
-        .map(z => fw(z).short),
-      status: 'Pendiente'
+      title:'Implantar / mejorar '+x.name,
+      control:id,
+      fw:x.fw.filter(z=>c.selected.includes(z)).map(z=>fw(z).short),
+      status:'Pendiente'
     });
   }
-
   save();
-  location.hash = 'actions';
+  location.hash='actions';
 }
 
-function auto() {
-  const c = ctx();
-
-  activeControls()
-    .filter(x => (c.assess[x.id]?.level || 0) < c.target)
-    .sort((a, b) => priority(b) - priority(a))
-    .forEach(x => {
-      if (!c.actions.some(a => a.control === x.id)) {
-        c.actions.push({
-          title: 'Implantar / mejorar ' + x.name,
-          control: x.id,
-          fw: x.fw
-            .filter(z => c.selected.includes(z))
-            .map(z => fw(z).short),
-          status: 'Pendiente'
-        });
-      }
+function auto(){
+  let c=ctx(),pool=activeControls(),noNorms=!pool.length;
+  if(noNorms)pool=C.controls;
+  pool=pool.filter(x=>(c.assess[x.id]?.level||0)<c.target&&!c.actions.some(a=>a.control===x.id))
+    .sort((a,b)=>priority(b)-priority(a));
+  if(noNorms)pool=pool.slice(0,10);
+  pool.forEach(x=>{
+    c.actions.push({
+      title:'Implantar / mejorar '+x.name,
+      control:x.id,
+      fw:x.fw.filter(z=>c.selected.includes(z)).map(z=>fw(z).short),
+      status:'Pendiente'
     });
-
-  save();
-  render();
-}
-
-function updateAction(i, v) {
-  ctx().actions[i].status = v;
-
-  save();
-  render();
-}
-
-function updateActionField(i, k, v) {
-  if (!ctx().actions[i] || !['owner', 'due', 'note'].includes(k)) {
-    return;
-  }
-
-  ctx().actions[i][k] = String(v ?? '').slice(0, 2000);
-
-  save();
-}
-
-function addEvidence(e) {
-  e.preventDefault();
-
-  const f = new FormData(e.target);
-
-  ctx().evidence.push({
-    title: f.get('title'),
-    control: f.get('control'),
-    ref: f.get('ref'),
-    owner: f.get('owner'),
-    reviewDate: f.get('reviewDate'),
-    status: f.get('status'),
-    notes: f.get('notes')
   });
-
+  c.updatedAt=now();
   save();
   render();
 }
 
-function addRisk(e) {
+function updateAction(i,v){
+  ctx().actions[i].status=v;
+  save();
+  render();
+}
+
+function updateActionField(i,k,v){
+  if(!ctx().actions[i]||!['owner','due','note'].includes(k))return;
+  ctx().actions[i][k]=String(v??'').slice(0,2000);
+  save();
+}
+
+let evidenceEditing=null;
+let editing=null;
+
+function evidenceFromForm(form){
+  const f=new FormData(form),g=k=>String(f.get(k)??'').slice(0,2000);
+  return {title:g('title').trim(),control:g('control'),ref:g('ref'),owner:g('owner'),reviewDate:g('reviewDate'),status:g('status'),notes:g('notes')};
+}
+
+function addEvidence(e){
   e.preventDefault();
+  ctx().evidence.push(evidenceFromForm(e.target));
+  evidenceEditing=null;
+  save();
+  render();
+}
 
-  const f = new FormData(e.target);
+function editEvidence(i){
+  if(!ctx().evidence[i])return;
+  evidenceEditing=i;
+  render();
+}
 
+function cancelEditEvidence(){
+  evidenceEditing=null;
+  render();
+}
+
+function saveEvidence(e,i){
+  e.preventDefault();
+  const list=ctx().evidence;
+  if(!list[i])return;
+  list[i]=Object.assign({},list[i],evidenceFromForm(e.target));
+  evidenceEditing=null;
+  save();
+  render();
+}
+
+function addRisk(e){
+  e.preventDefault();
+  let f=new FormData(e.target);
   ctx().risks.push({
-    title: f.get('title'),
-    control: f.get('control'),
-    impact: Number(f.get('impact')),
-    likelihood: Number(f.get('likelihood')),
-    owner: f.get('owner'),
-    treatment: f.get('treatment'),
-    status: f.get('status')
+    title:f.get('title'),
+    control:f.get('control'),
+    impact:+f.get('impact'),
+    likelihood:+f.get('likelihood'),
+    owner:f.get('owner'),
+    treatment:f.get('treatment'),
+    status:f.get('status')
   });
-
   save();
   render();
 }
 
-function addAudit(e) {
+function addAudit(e){
   e.preventDefault();
-
-  const f = new FormData(e.target);
-
+  let f=new FormData(e.target);
   ctx().audits.push({
-    name: f.get('name'),
-    scope: f.get('scope'),
-    owner: f.get('owner'),
-    date: f.get('date'),
-    findings: f.get('findings'),
-    status: f.get('status')
+    name:f.get('name'),
+    scope:f.get('scope'),
+    owner:f.get('owner'),
+    date:f.get('date'),
+    findings:f.get('findings'),
+    status:f.get('status')
   });
-
   save();
   render();
 }
 
-function removeItem(k, i) {
-  ctx()[k].splice(i, 1);
+function startEdit(k,i){
+  if(!ctx()[k]||!ctx()[k][i])return;
+  editing={k,i};
+  render();
+}
 
+function cancelEdit(){
+  editing=null;
+  render();
+}
+
+function formObj(form,keys){
+  const f=new FormData(form),o={};
+  keys.forEach(k=>{o[k]=String(f.get(k)??'').slice(0,2000)});
+  return o;
+}
+
+function saveItem(e,k,i){
+  e.preventDefault();
+  const list=ctx()[k];
+  if(!list||!list[i])return;
+  const keys={risks:['title','control','owner','treatment','status'],audits:['name','scope','owner','date','status','findings'],actions:['title','control','owner','due','status','note']}[k];
+  const o=formObj(e.target,keys);
+  if(k==='risks'){o.impact=+new FormData(e.target).get('impact')||1;o.likelihood=+new FormData(e.target).get('likelihood')||1}
+  if(k==='actions'&&o.control!==list[i].control){const x=ctl(o.control);if(x)o.fw=x.fw.filter(z=>ctx().selected.includes(z)).map(z=>fw(z).short)}
+  list[i]=Object.assign({},list[i],o);
+  editing=null;
+  save();
+  render();
+}
+
+function addAction(e){
+  e.preventDefault();
+  const o=formObj(e.target,['title','control','owner','due','status','note']),x=ctl(o.control),c=ctx();
+  c.actions.push(Object.assign(o,{fw:x?x.fw.filter(z=>c.selected.includes(z)).map(z=>fw(z).short):[]}));
+  editing=null;
+  save();
+  render();
+}
+
+function removeItem(k,i){
+  editing=null;
+  if(k==='evidence')evidenceEditing=null;
+  ctx()[k].splice(i,1);
   save();
   render();
 }
@@ -741,105 +511,80 @@ function removeItem(k, i) {
  * Guarda una fotografía del estado actual de cumplimiento.
  * Conserva como máximo los 12 snapshots más recientes de la empresa.
  */
-function saveCoverageSnapshot(label = '') {
-  const c = ctx();
+function saveCoverageSnapshot(label=''){
+  const c=ctx();
 
-  if (!c || !c.id) {
+  if(!c||!c.id){
     alert('Selecciona una empresa antes de guardar el historial.');
     return;
   }
 
-  const cov = coverage();
-  const maturityValue = Number(mavg());
-  const snapshots = Array.isArray(c.snapshots) ? c.snapshots : [];
-  const date = new Date();
+  const cov=coverage();
+  const maturityValue=Number(mavg());
+  const snapshots=Array.isArray(c.snapshots)?c.snapshots:[];
+  const date=new Date();
 
-  const snapshot = {
-    id: 'snap-' +
-      date.getTime().toString(36) +
-      '-' +
-      Math.random().toString(36).slice(2, 7),
-
-    date: date.toISOString(),
-
-    label: String(label || '').trim().slice(0, 120) ||
-      'Revisión de cumplimiento',
-
-    coverage: {
-      total: Number(cov.total) || 0,
-      cubierto: Number(cov.cubierto) || 0,
-      parcial: Number(cov.parcial) || 0,
-      gap: Number(cov.gap) || 0,
-      no_aplica: Number(cov.no_aplica) || 0,
-      pct: Number(cov.pct) || 0
+  const snapshot={
+    id:'snap-'+date.getTime().toString(36)+'-'+Math.random().toString(36).slice(2,7),
+    date:date.toISOString(),
+    label:String(label||'').trim().slice(0,120)||'Revisión de cumplimiento',
+    coverage:{
+      total:Number(cov.total)||0,
+      cubierto:Number(cov.cubierto)||0,
+      parcial:Number(cov.parcial)||0,
+      gap:Number(cov.gap)||0,
+      no_aplica:Number(cov.no_aplica)||0,
+      pct:Number(cov.pct)||0
     },
-
-    maturity: Number.isFinite(maturityValue)
-      ? Math.round(maturityValue * 100) / 100
-      : 0
+    maturity:Number.isFinite(maturityValue)?Math.round(maturityValue*100)/100:0
   };
 
-  c.snapshots = [...snapshots, snapshot].slice(-12);
-  c.updatedAt = now();
+  c.snapshots=[...snapshots,snapshot].slice(-12);
+  c.updatedAt=now();
 
-  if (save()) {
+  if(save()){
     alert('Snapshot guardado correctamente.');
     render();
   }
 }
 
-function saveProfile(e) {
+function saveProfile(e){
   e.preventDefault();
-
-  const f = new FormData(e.target);
-
-  db.profile = {
+  let f=new FormData(e.target);
+  db.profile={
     ...db.profile,
-    name: f.get('name') || 'Administrador',
-    role: f.get('role') || 'Usuario',
-    email: f.get('email') || '',
-    avatar: (
-      f.get('avatar') ||
-      f.get('name') ||
-      'A'
-    ).slice(0, 2).toUpperCase()
+    name:f.get('name')||'Administrador',
+    role:f.get('role')||'Usuario',
+    email:f.get('email')||'',
+    avatar:(f.get('avatar')||f.get('name')||'A').slice(0,2).toUpperCase()
   };
-
   save();
   render();
 }
 
-function saveSettings(e) {
+function saveSettings(e){
   e.preventDefault();
-
-  const f = new FormData(e.target);
-
-  db.settings.defaultTarget = Number(f.get('defaultTarget'));
-  db.settings.autoRecommendations =
-    f.get('autoRecommendations') === 'on';
-
+  let f=new FormData(e.target);
+  db.settings.defaultTarget=+f.get('defaultTarget');
+  db.settings.autoRecommendations=f.get('autoRecommendations')==='on';
   save();
   render();
 }
 
-function setPreference(k, v) {
-  db.settings[k] = v;
-
+function setPreference(k,v){
+  db.settings[k]=v;
   save();
   render();
 }
 
-function cycleTheme() {
-  db.settings.theme =
-    db.settings.theme === 'oscuro' ? 'claro' : 'oscuro';
-
+function cycleTheme(){
+  db.settings.theme=db.settings.theme==='oscuro'?'claro':'oscuro';
   save();
   render();
 }
 
-function toggleSetting(k, v) {
-  db.settings[k] = v;
-
+function toggleSetting(k,v){
+  db.settings[k]=v;
   save();
   render();
 }

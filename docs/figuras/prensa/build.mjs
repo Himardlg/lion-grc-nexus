@@ -399,3 +399,4 @@ const page = k.pageHtml({
 const file = theme === "light" ? "index.html" : "prensa.html";
 writeFileSync(join(HERE, file), page);
 console.log("wrote", file);
+
