@@ -1,5 +1,5 @@
 {
-  "version": "1.19.1",
+  "LION-GRC-NEXUS",
   "note": "Informativo: el catálogo vigente está en app/catalog.js (importado de Rosetta, ver NOTICE.md). Las descripciones no reproducen texto protegido de normas.",
   "frameworks": [
     "iso27001",
