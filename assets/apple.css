@@ -1210,3 +1210,18 @@ input:focus-visible {
   .shell .aboutnexus .aboutstats { grid-template-columns: 1fr 1fr; }
   .shell .aboutnexus .aboutactions a { width: 100%; justify-content: center; }
 }
+
+/* Mis empresas: selección múltiple · Evidencias: edición */
+.shell .companycard{position:relative}
+.shell .companypick{position:absolute;top:12px;right:12px;display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-10px -10px 0 0;cursor:pointer;z-index:1}
+.shell .companypick input{width:20px;height:20px;margin:0;accent-color:var(--accent-ink,#6b4c00);cursor:pointer}
+.shell .companycard.picked{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.shell .companytop{flex-wrap:wrap;gap:12px}
+.shell .companybulk{flex:1 0 100%;display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;padding-top:14px;border-top:1px solid var(--line,rgba(0,0,0,.1))}
+.shell .companybulk .bulkall{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:600}
+.shell .companybulk .bulkall input{width:18px;height:18px;margin:0;accent-color:var(--accent-ink,#6b4c00)}
+.shell .companybulk .bulkcount{color:var(--muted);flex:1;min-width:120px}
+.shell .companybulk button:disabled{opacity:.45;cursor:not-allowed}
+.shell main .lineactions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.shell main .line.evedit{display:block}
+.shell main .line.evedit .evedithead{flex:1 0 100%;margin-bottom:8px}
