@@ -45,6 +45,7 @@ Object.assign(window, {
   editEvidence,
   cancelEditEvidence,
   saveEvidence,
+  toggleMappingExpand,
   toggle,
   setA,
   setSoa,

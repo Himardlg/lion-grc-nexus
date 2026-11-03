@@ -169,8 +169,7 @@ function saveControlEvaluation(id){
   };
   c.updatedAt=now();
   if(save()){
-    const status=document.getElementById('saveStatus');
-    if(status)status.innerHTML=icon('check')+' Evaluación guardada';
+    flashSaveStatus(true,'Evaluación guardada');
   }
 }
 
@@ -239,11 +238,7 @@ function saveRequirementDetails(id){
   };
   c.updatedAt=now();
   if(save()){
-    const el=document.getElementById('saveStatus');
-    if(el){
-      el.className='save-status saved';
-      el.innerHTML=icon('check')+' Cambios guardados';
-    }
+    flashSaveStatus(true,'Cambios guardados');
     render();
   }
 }
@@ -279,6 +274,15 @@ function filterMappings(){
   document.querySelectorAll('.mappingreview').forEach(x=>{
     x.style.display=(!q||x.dataset.search.includes(q))&&(!st||x.dataset.status===st)?'':'none';
   });
+}
+
+function toggleMappingExpand(btn){
+  const card=btn?.closest('.mappingreview');
+  if(!card)return;
+  const open=card.classList.toggle('is-expanded');
+  btn.setAttribute('aria-expanded',open?'true':'false');
+  const label=btn.querySelector('span');
+  if(label)label.textContent=open?'Cerrar':'Expandir';
 }
 
 function exportMappingReviews(){
