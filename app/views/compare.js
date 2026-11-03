@@ -26,8 +26,33 @@ function compareFw(a,b){
  const eqA=A.map(r=>({r,eq:B.filter(o=>link(r,o)),st:B.some(o=>strong(r,o))})),eqB=B.map(r=>({r,eq:A.filter(o=>link(r,o))}));
  return{A,B,withEq:eqA.filter(x=>x.eq.length).length,strong:eqA.filter(x=>x.st).length,onlyA:eqA.filter(x=>!x.eq.length).map(x=>x.r),onlyB:eqB.filter(x=>!x.eq.length).map(x=>x.r)}}
 function compareView(){
- const q=new URLSearchParams(location.hash.split('?')[1]||''),a=q.get('a')||'ens',b=q.get('b')||'iso27001',z=compareFw(a,b),opt=(v)=>C.frameworks.map(f=>`<option value="${f.id}" ${f.id===v?'selected':''}>${esc(f.short)}</option>`).join(''),pct=n=>z.A.length?Math.round(n/z.A.length*100):0,li=l=>l.slice(0,40).map(r=>`<a class="pn-req" href="#detail?type=requirement&id=${r.id}"><b>${esc(r.reference)}</b><span>${esc(r.title)}</span></a>`).join('')+(l.length>40?`<small>…y ${l.length-40} más</small>`:'')||'<small>Ninguno</small>';
+ const q=new URLSearchParams(location.hash.split('?')[1]||''),a=q.get('a')||'ens',b=q.get('b')||'iso27001',z=compareFw(a,b),
+  opt=(v)=>C.frameworks.map(f=>`<option value="${f.id}" ${f.id===v?'selected':''}>${esc(f.short)}</option>`).join(''),
+  pct=n=>z.A.length?Math.round(n/z.A.length*100):0,
+  li=l=>l.length?l.slice(0,60).map(r=>`<a class="pn-req" href="#detail?type=requirement&id=${r.id}"><b>${esc(r.reference)}</b><span>${esc(r.title)}</span></a>`).join('')+(l.length>60?`<small class="compare-more">…y ${l.length-60} más</small>`:''):'<p class="empty">Ninguno en exclusiva</p>';
+ const fa=fw(a),fb=fw(b);
  return head('COMPARAR','Dos normas frente a frente','Qué parte de una norma ya cubres si cumples la otra, y qué exige cada una en exclusiva.')+
- `<section class="panel"><div class="panelhead"><h2>Comparación</h2><div class="pn-btns" style="flex-direction:row"><select aria-label="Norma A" onchange="location.hash='compare?a='+this.value+'&b=${b}'">${opt(a)}</select><span>${icon('arrow-left-right')}</span><select aria-label="Norma B" onchange="location.hash='compare?a=${a}&b='+this.value">${opt(b)}</select></div></div>
- <p class="pn-lead"><b>${z.withEq}</b> de ${z.A.length} requisitos de ${esc(fw(a).short)} (${pct(z.withEq)}%) tienen equivalente en ${esc(fw(b).short)}; <b>${z.strong}</b> con equivalencia plena. Solo ${esc(fw(a).short)} exige ${z.onlyA.length} y solo ${esc(fw(b).short)} exige ${z.onlyB.length}.</p>
- <div class="pn-cols"><div class="pn-col"><h3>Solo en ${esc(fw(a).short)}</h3>${li(z.onlyA)}</div><div class="pn-col"><h3>Solo en ${esc(fw(b).short)}</h3>${li(z.onlyB)}</div></div></section>`}
+ `<section class="panel compare-panel">
+  <div class="panelhead compare-head">
+   <div>
+    <h2>Comparación</h2>
+    <p class="compare-sub">${esc(fa.short)} frente a ${esc(fb.short)}</p>
+   </div>
+   <div class="pn-btns compare-pick">
+    <label><span>Norma A</span><select aria-label="Norma A" onchange="location.hash='compare?a='+this.value+'&b=${b}'">${opt(a)}</select></label>
+    <span class="compare-swap" aria-hidden="true">${icon('arrow-left-right')}</span>
+    <label><span>Norma B</span><select aria-label="Norma B" onchange="location.hash='compare?a=${a}&b='+this.value">${opt(b)}</select></label>
+   </div>
+  </div>
+  <div class="compare-kpis" role="group" aria-label="Resumen de comparación">
+   <div><b>${z.withEq}</b><span>${pct(z.withEq)}% con equivalente</span></div>
+   <div><b>${z.strong}</b><span>equivalencia plena</span></div>
+   <div><b>${z.onlyA.length}</b><span>solo ${esc(fa.short)}</span></div>
+   <div><b>${z.onlyB.length}</b><span>solo ${esc(fb.short)}</span></div>
+  </div>
+  <p class="pn-lead compare-lead"><b>${z.withEq}</b> de ${z.A.length} requisitos de ${esc(fa.short)} tienen equivalente en ${esc(fb.short)}. Abajo, lo que cada norma exige en exclusiva.</p>
+  <div class="pn-cols compare-cols">
+   <div class="pn-col"><div class="compare-colhead"><h3>Solo en ${esc(fa.short)}</h3><em>${z.onlyA.length}</em></div><div class="compare-scroll">${li(z.onlyA)}</div></div>
+   <div class="pn-col"><div class="compare-colhead"><h3>Solo en ${esc(fb.short)}</h3><em>${z.onlyB.length}</em></div><div class="compare-scroll">${li(z.onlyB)}</div></div>
+  </div>
+ </section>`}
