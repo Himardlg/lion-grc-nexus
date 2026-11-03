@@ -28,3 +28,14 @@ No se tocaron: sidebar, intro/vídeo, catalog.js, motor ni funciones del Bloque 
   - `prefers-reduced-motion` (sin animación de entrada ni del interruptor), `prefers-reduced-transparency` y oculto al imprimir.
 - **Escritorio:** sin cambios. El sidebar de Yoandy ya tiene su menú de perfil al pie, y la barra inferior no se muestra en escritorio para no tocarlo.
 - Archivos: `app/app.js` (función `bottomMenu`, `toggleSheet`, una llamada en `view()` y el cierre en `render()`), `app/icons.js` (iconos Lucide `user`, `ellipsis`, `circle-help`), `assets/apple.css` (bloque «Menú inferior»).
+
+## Corrección de arranque, evidencias, borrado múltiple y traducción
+- **Arranque:** `boot.js` exportaba `deleteCompany`, que no existía, y lanzaba `ReferenceError` antes de pintar nada (pantalla en blanco). Ahora `deleteCompany(id)` está implementada (con confirmación) y reutiliza el mismo flujo que el borrado múltiple.
+- **Mis empresas:** casilla en cada tarjeta, «Seleccionar todas», contador y botón «Eliminar seleccionadas» (con confirmación que lista las empresas). Si se borra la activa se activa otra.
+- **Evidencias:** botón «Editar» en cada evidencia con formulario en línea (guardar/cancelar). En una empresa nueva, sin normas elegidas, el desplegable de control salía vacío; ahora ofrece todo el catálogo.
+- **Traducción ES/EN:** `app/i18n.js` no se cargaba y faltaba el diccionario. Se añade `app/i18n-en.js` (~1.450 entradas: interfaz, catálogo y detalle de requisitos/controles) y ambos se cargan en `index.html`. Los `<option>` conservan su valor en español al guardar, para que los datos no cambien según el idioma de edición.
+- `dist/nexus.html` reconstruido.
+
+## Editar riesgos, auditorías y acciones
+- Riesgos, Auditorías y Plan de acción: botón «Editar» con formulario en línea (guardar/cancelar).
+- Plan de acción: nuevo formulario «Nueva acción» (título, control, responsable, fecha, estado, nota). «Generar acciones prioritarias» ya funciona en una empresa nueva sin normas (crea las 10 de mayor prioridad). Los desplegables de control ofrecen todo el catálogo si aún no hay normas.

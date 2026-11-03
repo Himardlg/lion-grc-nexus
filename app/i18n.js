@@ -36,6 +36,7 @@
       var v=tr(n.nodeValue);if(v!==n.nodeValue)n.nodeValue=v;
     }else if(n.nodeType===1){
       if(n.nodeName==='SCRIPT'||n.nodeName==='STYLE')return;
+      if(n.nodeName==='OPTION'&&!n.hasAttribute('value'))n.setAttribute('value',n.textContent.replace(/\s+/g,' ').trim());
       for(var i=0;i<ATTRS.length;i++){var a=n.getAttribute(ATTRS[i]);if(a){var t=tr(a);if(t!==a)n.setAttribute(ATTRS[i],t)}}
       if(n.nodeName==='INPUT'&&(n.type==='button'||n.type==='submit')&&n.value){var tv=tr(n.value);if(tv!==n.value)n.value=tv}
       for(var c=n.firstChild;c;c=c.nextSibling)node(c);

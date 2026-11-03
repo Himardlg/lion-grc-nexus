@@ -79,16 +79,56 @@ function editCompany(id){
   location.hash='company';
 }
 
-function deleteCompany(id){
-  let c=db.companies[id];
-  if(!c)return;
-  if(db.settings.confirmReset!==false&&!confirm(`¿Eliminar la empresa “${esc(c.name)}” y todos sus datos?`))return;
-  delete db.companies[id];
-  if(db.activeCompanyId===id)db.activeCompanyId=Object.keys(db.companies)[0]||'';
+
+function removeCompanies(ids,message){
+  ids=[...new Set(ids)].filter(id=>db.companies&&db.companies[id]);
+  if(!ids.length)return false;
+  if(!confirm(message(ids.map(id=>db.companies[id].name||'Sin nombre'))))return false;
+  ids.forEach(id=>{delete db.companies[id]});
+  if(!db.companies[db.activeCompanyId])db.activeCompanyId=Object.keys(db.companies)[0]||'';
   save();
-  if(location.hash!=='#companies')location.hash='companies';
-  else render();
+  render();
+  return true;
 }
+
+function deleteCompany(id){
+  if(!db.companies[id])return;
+  const en=db.settings.language==='en';
+  return removeCompanies([id],n=>en
+    ?`You are about to delete the company “${n[0]}” and all its associated data.\n\nThis action cannot be undone. Do you want to continue?`
+    :`Vas a eliminar la empresa «${n[0]}» y todos sus datos asociados.\n\nEsta acción no se puede deshacer. ¿Quieres continuar?`);
+}
+
+function selectedCompanyIds(){
+  return [...document.querySelectorAll('.company-select:checked')].map(cb=>cb.value);
+}
+
+function updateCompanySelection(){
+  const n=selectedCompanyIds().length,total=document.querySelectorAll('.company-select').length;
+  const cnt=document.getElementById('company-count'),btn=document.getElementById('company-del'),all=document.getElementById('company-all');
+  const en=db.settings.language==='en';
+  if(cnt)cnt.textContent=en?`${n} selected`:`${n} seleccionada${n===1?'':'s'}`;
+  if(btn)btn.disabled=!n;
+  if(all){all.checked=n>0&&n===total;all.indeterminate=n>0&&n<total}
+  document.querySelectorAll('.companycard').forEach(card=>{const cb=card.querySelector('.company-select');card.classList.toggle('picked',!!(cb&&cb.checked))});
+}
+
+function toggleAllCompanies(on){
+  document.querySelectorAll('.company-select').forEach(cb=>{cb.checked=!!on});
+  updateCompanySelection();
+}
+
+function deleteSelectedCompanies(){
+  const ids=selectedCompanyIds();
+  const en=db.settings.language==='en';
+  if(!ids.length){alert(en?'Select at least one company.':'Selecciona al menos una empresa.');return}
+  removeCompanies(ids,names=>{
+    if(en){const more=names.length>10?`\n… and ${names.length-10} more`:'';return `You are about to delete ${names.length} company(ies) and all their associated data.\n\n${names.slice(0,10).join('\n')}${more}\n\nThis action cannot be undone. Do you want to continue?`}
+    const more=names.length>10?`\n… y ${names.length-10} más`:'';
+    return `Vas a eliminar ${names.length} empresa(s) y todos sus datos asociados.\n\n${names.slice(0,10).join('\n')}${more}\n\nEsta acción no se puede deshacer. ¿Quieres continuar?`;
+  });
+}
+
 
 function toggle(id,on){
   let c=ctx();
@@ -321,19 +361,20 @@ function make(id){
 }
 
 function auto(){
-  let c=ctx();
-  activeControls().filter(x=>(c.assess[x.id]?.level||0)<c.target)
-    .sort((a,b)=>priority(b)-priority(a))
-    .forEach(x=>{
-      if(!c.actions.some(a=>a.control===x.id)){
-        c.actions.push({
-          title:'Implantar / mejorar '+x.name,
-          control:x.id,
-          fw:x.fw.filter(z=>c.selected.includes(z)).map(z=>fw(z).short),
-          status:'Pendiente'
-        });
-      }
+  let c=ctx(),pool=activeControls(),noNorms=!pool.length;
+  if(noNorms)pool=C.controls;
+  pool=pool.filter(x=>(c.assess[x.id]?.level||0)<c.target&&!c.actions.some(a=>a.control===x.id))
+    .sort((a,b)=>priority(b)-priority(a));
+  if(noNorms)pool=pool.slice(0,10);
+  pool.forEach(x=>{
+    c.actions.push({
+      title:'Implantar / mejorar '+x.name,
+      control:x.id,
+      fw:x.fw.filter(z=>c.selected.includes(z)).map(z=>fw(z).short),
+      status:'Pendiente'
     });
+  });
+  c.updatedAt=now();
   save();
   render();
 }
@@ -350,18 +391,39 @@ function updateActionField(i,k,v){
   save();
 }
 
+let evidenceEditing=null;
+let editing=null;
+
+function evidenceFromForm(form){
+  const f=new FormData(form),g=k=>String(f.get(k)??'').slice(0,2000);
+  return {title:g('title').trim(),control:g('control'),ref:g('ref'),owner:g('owner'),reviewDate:g('reviewDate'),status:g('status'),notes:g('notes')};
+}
+
 function addEvidence(e){
   e.preventDefault();
-  let f=new FormData(e.target);
-  ctx().evidence.push({
-    title:f.get('title'),
-    control:f.get('control'),
-    ref:f.get('ref'),
-    owner:f.get('owner'),
-    reviewDate:f.get('reviewDate'),
-    status:f.get('status'),
-    notes:f.get('notes')
-  });
+  ctx().evidence.push(evidenceFromForm(e.target));
+  evidenceEditing=null;
+  save();
+  render();
+}
+
+function editEvidence(i){
+  if(!ctx().evidence[i])return;
+  evidenceEditing=i;
+  render();
+}
+
+function cancelEditEvidence(){
+  evidenceEditing=null;
+  render();
+}
+
+function saveEvidence(e,i){
+  e.preventDefault();
+  const list=ctx().evidence;
+  if(!list[i])return;
+  list[i]=Object.assign({},list[i],evidenceFromForm(e.target));
+  evidenceEditing=null;
   save();
   render();
 }
@@ -397,7 +459,49 @@ function addAudit(e){
   render();
 }
 
+function startEdit(k,i){
+  if(!ctx()[k]||!ctx()[k][i])return;
+  editing={k,i};
+  render();
+}
+
+function cancelEdit(){
+  editing=null;
+  render();
+}
+
+function formObj(form,keys){
+  const f=new FormData(form),o={};
+  keys.forEach(k=>{o[k]=String(f.get(k)??'').slice(0,2000)});
+  return o;
+}
+
+function saveItem(e,k,i){
+  e.preventDefault();
+  const list=ctx()[k];
+  if(!list||!list[i])return;
+  const keys={risks:['title','control','owner','treatment','status'],audits:['name','scope','owner','date','status','findings'],actions:['title','control','owner','due','status','note']}[k];
+  const o=formObj(e.target,keys);
+  if(k==='risks'){o.impact=+new FormData(e.target).get('impact')||1;o.likelihood=+new FormData(e.target).get('likelihood')||1}
+  if(k==='actions'&&o.control!==list[i].control){const x=ctl(o.control);if(x)o.fw=x.fw.filter(z=>ctx().selected.includes(z)).map(z=>fw(z).short)}
+  list[i]=Object.assign({},list[i],o);
+  editing=null;
+  save();
+  render();
+}
+
+function addAction(e){
+  e.preventDefault();
+  const o=formObj(e.target,['title','control','owner','due','status','note']),x=ctl(o.control),c=ctx();
+  c.actions.push(Object.assign(o,{fw:x?x.fw.filter(z=>c.selected.includes(z)).map(z=>fw(z).short):[]}));
+  editing=null;
+  save();
+  render();
+}
+
 function removeItem(k,i){
+  editing=null;
+  if(k==='evidence')evidenceEditing=null;
   ctx()[k].splice(i,1);
   save();
   render();
